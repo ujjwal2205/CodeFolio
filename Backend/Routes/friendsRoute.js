@@ -1,0 +1,10 @@
+import { acceptFriendRequest,sendFriendRequest,rejectFriendRequest,getFriends,removeFriend } from "../Controllers/friendsController.js";
+import express from "express";
+import authMiddleware from "../Middlewares/authMiddleware.js";
+const Friends=express.Router();
+Friends.post("/sendFriendRequest",sendFriendRequest);
+Friends.post("/acceptFriendRequest",acceptFriendRequest);
+Friends.post("/rejectFriendRequest",rejectFriendRequest);
+Friends.post("/getFriends",getFriends);
+Friends.post("/removeFriend",removeFriend);
+export default Friends;
