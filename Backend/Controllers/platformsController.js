@@ -1,15 +1,15 @@
 import axios from "axios";
+import userModel from "../models/userModel.js";
 import * as cheerio from "cheerio";
 // Codeforces
 const codeForces=async(req,res)=>{
-    const {Username}=req.body;
+    const {email}=req.body;
     try {
-        if(!Username){
-            return res.json({success:false,message:"Username Required"})
-        }
-        const response1=await fetch(`https://codeforces.com/api/user.info?handles=${Username}`);
-        const response2=await fetch(`https://codeforces.com/api/user.status?handle=${Username}`);
-        const response3=await fetch(`https://codeforces.com/api/user.rating?handle=${Username}`);
+        const normalizedEmail=email.toLowerCase();
+        const user=await userModel.findOne({email:normalizedEmail});
+        const response1=await fetch(`https://codeforces.com/api/user.info?handles=${user.codeForces}`);
+        const response2=await fetch(`https://codeforces.com/api/user.status?handle=${user.codeForces}`);
+        const response3=await fetch(`https://codeforces.com/api/user.rating?handle=${user.codeForces}`);
         const data1=await response1.json();
         const data2=await response2.json();
         const data3=await response3.json();
@@ -23,6 +23,8 @@ const codeForces=async(req,res)=>{
                 solved.add(id);
             }
         }
+        user.codeForcesRating=data1.result[0].rating || 0;
+        await user.save();
         return res.json({success:true,data:data1.result[0],totalSolved:solved.size,contest:data3.result});
     } catch (error) {
         console.log(error);
@@ -31,11 +33,10 @@ const codeForces=async(req,res)=>{
 }
 //LeetCode
 const LeetCode=async(req,res)=>{
-    const {Username}=req.body;
-    if(!Username){
-        return res.json({success:false,message:"Username required"})
-    }
+    const {email}=req.body;
     try {
+        const normalizedEmail=email.toLowerCase();
+        const user=await userModel.findOne({email:normalizedEmail});
         const query=`
         query getUser($username:String!){
         matchedUser(username:$username){
@@ -61,10 +62,10 @@ const LeetCode=async(req,res)=>{
             },
             body:JSON.stringify({
                 query,
-                variables:{username:Username}
+                variables:{username:user.leetCode}
             })
         });
-       const response2 = await axios.get(`https://alfa-leetcode-api.onrender.com/${Username}/contest`,{
+       const response2 = await axios.get(`https://alfa-leetcode-api.onrender.com/${user.leetcode}/contest`,{
         timeout:30000
        });
         const result1=await response1.json();
@@ -72,6 +73,8 @@ const LeetCode=async(req,res)=>{
         if(!result1.data.matchedUser){
             return res.json({success:false,message:"Invalid Username"});
         }
+        user.leetCodeSolved=result1.data.matchedUser.submitStats.acSubmissionNum[0].count || 0;
+        await user.save();
         return res.json({success:true,data:result1,contest:result2});
     } catch (error) {
         console.log(error);
@@ -85,12 +88,11 @@ const HEADERS = {
   "Accept-Language": "en-US,en;q=0.9",
 };
 const codeChef=async(req,res)=>{
-    const {Username}=req.body;
-    if (!Username) {
-  return res.json({ success: false, message: "Username Required" });
-}
+    const {email}=req.body;
  try {
-    let response=await axios.get(`https://www.codechef.com/users/${Username}`,
+     const normalizedEmail=email.toLowerCase();
+     const user=await userModel.findOne({email:normalizedEmail});
+    let response=await axios.get(`https://www.codechef.com/users/${user.codeChef}`,
         {headers:HEADERS,timeout:30000}
     );
     response=response.data;
@@ -102,6 +104,8 @@ const codeChef=async(req,res)=>{
     const ratingText=$(".rating-number").text().trim()||0;
     const ratingMatch=ratingText.match(/\d+/);
     const rating=ratingMatch?Number(ratingMatch[0]):0;
+    user.codeChefRating=rating;
+    user.save();
     //highest Rating
     const highestRatingText=$("div.rating-header.text-center small").text();
     const highestRatingMatch=highestRatingText.match(/\d+/);
@@ -125,4 +129,20 @@ const codeChef=async(req,res)=>{
     return res.json({success:false,message:error.message});
  }
 }
-export {codeForces,LeetCode,codeChef};
+const Score=async(req,res)=>{
+    const {email}=req.body;
+    try {
+        const normalizedEmail=email.toLowerCase();
+        const user=await userModel.findOne({email:normalizedEmail});
+        if(!user){
+            return res.json({success:false,message:"User not found!"});
+        }
+        user.score=user.leetCodeSolved+(user.codeForcesRating*0.2)+(user.codeChefRating*0.2);
+        await user.save();
+        return res.json({success:true,message:"Score updated!"});
+    } catch (error) {
+        console.log(error);
+        return res.json({success:false,message:error.message});
+    }
+}
+export {codeForces,LeetCode,codeChef,Score};

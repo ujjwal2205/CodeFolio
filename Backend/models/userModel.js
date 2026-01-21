@@ -23,7 +23,11 @@ const userSchema=new mongoose.Schema({
     friendRequests:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"user"
-    }]
+    }],
+    leetCodeSolved:{type:Number,default:0},
+    codeForcesRating:{type:Number,default:0},
+    codeChefRating:{type:Number,default:0},
+    score:{type:Number,default:0}
 });
 const userModel=mongoose.models.user || mongoose.model("user",userSchema);
 export default userModel

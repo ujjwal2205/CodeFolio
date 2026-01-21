@@ -6,6 +6,7 @@ import siteRouter from "./Routes/siteRoute.js";
 import passwordReset from "./Routes/passwordResetRoute.js";
 import Insert from "./Routes/InsertRoute.js";
 import Friends from "./Routes/friendsRoute.js";
+import LeaderBoard from "./Routes/leaderBoardRoute.js";
 import cookieParser from "cookie-parser";
 import 'dotenv/config'
 const app=express();
@@ -26,6 +27,7 @@ app.use("/api/site",siteRouter);
 app.use("/api/forgot-password",passwordReset);
 app.use("/api/info",Insert);
 app.use("/api/friends",Friends);
+app.use("/api/Leaderboard",LeaderBoard);
 app.listen(port,()=>{
     console.log(`Server started on http://localhost:${port}`);
 })
