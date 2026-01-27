@@ -25,6 +25,7 @@ function Navbar({login,setLogin}) {
   <span className="folio-text">Folio</span>
 </Link>
         <div className='nav-links'>
+            <Link to="/"><h2>Home</h2></Link>
             <Link to="/about"><h2>About Us</h2></Link>
             <Link to="/#why-codefolio"><h2>Why CodeFolio</h2></Link>
             <Link to="/leaderboard"><h2>Leaderboard</h2></Link>
@@ -36,14 +37,22 @@ function Navbar({login,setLogin}) {
             <Link to="/signUp" className='sign-up'>Get Started</Link>
             </>
         ):(
+           <div className="user-actions">
+          <input
+          className="user-Search"
+          type="text"
+          placeholder="Search users"
+          />
           <div className='user-menu' ref={dropdownRef}>
            <div className='user-icon' onClick={toggleDropdown}>
            <FaUserCircle/>
            </div>
            <div className={`user-dropdown ${dropdown?"show":""}`}>
+           <Link to="/dashboard" className='friends-page-btn'>Dashboard</Link>
            <Link to="/friends" className='friends-page-btn'>Friends</Link>
            <Link to="/" className='logout-btn' onClick={handleLogout}>Logout</Link>
            </div>
+          </div>
           </div>
         )
         }

@@ -1,0 +1,123 @@
+.footer {
+  background: linear-gradient(180deg, #050505, #0a0a0f);
+  color: #f1f5f9;
+  padding: 5rem 2rem 2rem;
+  font-family: 'Outfit', sans-serif;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-brand h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #facc15;
+  margin-bottom: 0.8rem;
+}
+
+.footer-brand p {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  max-width: 300px;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.social-icons {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-icons a {
+  width: 42px;
+  height: 42px;
+  background: rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #facc15;
+  transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+  background: #facc15;
+  color: #050505;
+  transform: scale(1.2);
+  box-shadow: 0 12px 30px rgba(250,204,21,0.3);
+}
+
+.footer-links h4 {
+  margin-bottom: 1rem;
+  color: #f1f5f9;
+}
+
+.footer-links a {
+  display: block;
+  text-decoration: none;
+  color: #94a3b8;
+  margin-bottom: 0.6rem;
+  transition: all 0.25s ease;
+}
+
+.footer-links a:hover {
+  color: #facc15;
+  transform: translateX(4px);
+}
+
+.footer-cta h4 {
+  margin-bottom: 0.5rem;
+  color: #f1f5f9;
+}
+
+.footer-cta p {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 1rem;
+  max-width: 280px;
+}
+
+.cta-btn {
+  padding: 0.7rem 1.5rem;
+  background: #facc15;
+  color: #050505;
+  border-radius: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(250,204,21,0.35);
+}
+.footer-bottom {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.footer-bottom .heart {
+  color: #fb7185;
+  margin: 0 4px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}

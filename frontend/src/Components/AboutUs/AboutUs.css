@@ -1,0 +1,67 @@
+.aboutus {
+  background: linear-gradient(180deg, #050505, #0a0a0f);
+  color: #f1f5f9;
+  padding: 6rem 2rem;
+}
+
+.aboutus-container {
+  max-width: 1200px;
+  margin: auto;
+  text-align: center;
+}
+
+.aboutus h2 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 0.8rem;
+  color: #facc15;
+}
+
+.aboutus-subtitle {
+  color: #94a3b8;
+  font-size: 1rem;
+  margin-bottom: 3rem;
+}
+
+.aboutus-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.aboutus-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 2rem 1.5rem;
+  flex: 1 1 250px;
+  max-width: 300px;
+  transition: all 0.3s ease;
+}
+
+.aboutus-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(250, 204, 21, 0.2);
+}
+
+.aboutus-icon {
+  font-size: 2.5rem;
+  color: #facc15;
+  margin-bottom: 1rem;
+}
+
+.aboutus-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+.aboutus-card p {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+

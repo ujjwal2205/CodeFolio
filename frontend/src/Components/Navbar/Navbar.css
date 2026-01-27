@@ -1,11 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
-
 .Navbar {
   height: 72px;
   background: linear-gradient(180deg, rgba(5,5,5,0.92), rgba(5,5,5,0.78));
   backdrop-filter: blur(22px) saturate(170%);
   border-bottom: 1px solid rgba(255,255,255,0.08);
-  position: sticky;
   top: 0;
   z-index: 1000;
   display: flex;
@@ -25,7 +23,6 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 0;
   font-size: 1.7rem;
   font-weight: 800;
   text-decoration: none;
@@ -33,15 +30,11 @@
 
 .code-text {
   color: #facc15;
-  text-shadow: 0 0 8px rgba(250,204,21,0.35);
+  text-shadow: 0 0 2px rgba(250,204,21,0.35);
 }
 
 .folio-text {
   color: #f1f5f9;
-}
-
-.logo:hover {
-  opacity: 0.96;
 }
 
 .nav-links {
@@ -74,8 +67,8 @@
   bottom: 0;
   width: 0%;
   height: 2px;
-  border-radius: 4px;
   background: #facc15;
+  border-radius: 4px;
   transition: width 0.35s ease;
 }
 
@@ -93,14 +86,45 @@
   gap: 1.6rem;
 }
 
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-Search {
+  width: 220px;
+  padding: 10px 14px;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+
+  color: #f1f5f9;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.user-Search::placeholder {
+  color: #64748b;
+}
+
+.user-Search:focus {
+  border-color: #facc15;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.15);
+}
+
 .login-btn {
-  position: relative;
   color: #64748b;
   font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
-  padding: 6px 4px;
-  transition: color 0.25s ease;
+  position: relative;
 }
 
 .login-btn::after {
@@ -111,7 +135,6 @@
   width: 0%;
   height: 2px;
   background: #facc15;
-  border-radius: 4px;
   transition: width 0.3s ease;
 }
 
@@ -124,14 +147,13 @@
 }
 
 .sign-up {
-  background: transparent;
   color: #facc15;
   padding: 10px 26px;
   border-radius: 14px;
+  border: 1.5px solid #facc15;
   font-size: 0.9rem;
   font-weight: 700;
   text-decoration: none;
-  border: 1.5px solid #facc15;
   transition: all 0.3s ease;
 }
 
@@ -149,16 +171,13 @@
   font-size: 2.4rem;
   cursor: pointer;
   color: #6366f1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: transform 0.3s ease;
+  margin-top: 7px;
 }
 
 .user-icon:hover {
   transform: scale(1.1);
 }
-
 .user-dropdown {
   position: absolute;
   top: calc(72px + 6px);
@@ -208,3 +227,4 @@
   color: #ec4899;
   padding-left: 22px;
 }
+
