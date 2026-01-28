@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import validator from "validator";
 import jwt from "jsonwebtoken";
+import verifyGoogleToken from "../Middlewares/googleAuth.js";
 const createToken=(email)=>{
     return jwt.sign({email:email},process.env.JWT_SECRET,{ expiresIn: "7d" });
 }
@@ -101,4 +102,38 @@ const logOut=async(req,res)=>{
         return res.json({success:false,message:error.message});
     }
 }
-export {signUp,logIn,logOut};
+//googleLogin
+const googleLogin=async(req,res)=>{
+    try {
+        const {idToken}=req.body;
+        const googleUser=await verifyGoogleToken(idToken);
+        const {email,given_name,family_name}=googleUser;
+        const normalizedEmail=email.toLowerCase();
+        let user=await userModel.findOne({email:normalizedEmail});
+        if(user && user.authType!=="google"){
+        return res.json({success:false,message:"This email is already registered via password login"});
+        }
+        if(!user){
+           user=new userModel({
+            email:normalizedEmail,
+            firstName:given_name,
+            lastName:family_name||"N/A",
+            authType:"google"
+           });
+           await user.save();
+        }
+        const token=createToken(normalizedEmail);
+        res.cookie("token",token,{
+        httpOnly:true,
+        secure:false,
+        sameSite:"lax",
+        maxAge:7*24*60*60*1000
+    })
+    return res.json({success:true,message:"Login Successful!"});
+    } catch (error) {
+        console.log(error);
+        return res.json({success:false,message:"Invalid Token"});
+        
+    }
+}
+export {signUp,logIn,logOut,googleLogin};
