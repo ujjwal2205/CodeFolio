@@ -1,11 +1,13 @@
 import React,{useEffect} from 'react'
-import {useLocation} from 'react-router-dom';
+import {useLocation,useNavigate} from 'react-router-dom';
 import Header from '../../Components/Header/Header.jsx';
 import HowItWorks from '../../Components/howItWorks/howItWorks.jsx';
 import WhyCodeFolio from '../../Components/WhyCodeFolio/WhyCodeFolio.jsx';
 import LeaderBoardPreview from '../../Components/LeaderBoardPreview/LeaderBoardPreview.jsx';
-function HomePage({login,setLogin}) {
+import { toast } from 'react-toastify';
+function HomePage({login}) {
   const location=useLocation();
+  const navigate=useNavigate();
   useEffect(()=>{
     if(location.hash){
       const id=location.hash.replace('#','');
@@ -17,12 +19,18 @@ function HomePage({login,setLogin}) {
       }
     }
   },[location]);
+  useEffect(()=>{
+    if(location.state?.toastMessage){
+      toast.success(location.state.toastMessage);
+      navigate(location.pathname,{replace:true,state:{}})
+    }
+  },[location,navigate]);
   return (
     <div>
-      <Header/>
+      <Header login={login}/>
       <HowItWorks/>
       <WhyCodeFolio/>
-      <LeaderBoardPreview/>
+      <LeaderBoardPreview login={login}/>
     </div>
   )
 }

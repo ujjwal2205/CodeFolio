@@ -4,17 +4,20 @@ import { StoreContext } from "../../context/StoreContext";
 import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "./SignUp.css";
+import { useNavigate } from "react-router-dom";
 
-function SignUp() {
+function SignUp({login,setLogin}) {
   const { url } = useContext(StoreContext);
-
+  const navigate=useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [data, setData] = useState({
     userName: "",
     firstName: "",
+    middleName:"",
     lastName: "",
     email: "",
     password: "",
@@ -29,10 +32,46 @@ function SignUp() {
     setData({ ...data, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-
+    try{
+    const response=await axios.post(url+"/api/user/signUp",data,{ withCredentials: true });
+    if(response.data.success){
+    setLogin(true);
+    navigate('/',{state:{toastMessage:"Login Successful!"}})
+    }
+    else{
+      setLogin(false);
+      toast.error(response.data.message);
+    }
+  }
+  catch(error){
+    console.log(error);
+    toast.error(error.message);
+  }
   };
+  const handleSuccess=async(CredentialResponse)=>{
+    const token=CredentialResponse.credential;
+    try {
+      const response=await axios.post(url+"/api/user/googleLogin",{
+        idToken:token
+      },{ withCredentials: true })
+      if(response.data.success){
+      setLogin(true);
+      navigate('/',{state:{toastMessage:"Login Successful!"}})
+      }
+      else{
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+      navigate('/signUp');
+    }
+  }
+  const handleError = () => {
+        alert("Google Sign In was unsuccessful. Try again later.");
+      };
 
   return (
     <div className="cf-signup-page">
@@ -92,7 +131,10 @@ function SignUp() {
         <p className="or-text">OR</p>
 
         <div className="google-login">
-          <GoogleLogin />
+          <GoogleLogin 
+            onSuccess={handleSuccess}
+            onError={handleError}
+          />
         </div>
 
         <p className="cf-signup-footer">

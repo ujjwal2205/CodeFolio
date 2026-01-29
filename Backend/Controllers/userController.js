@@ -96,7 +96,7 @@ const logOut=async(req,res)=>{
             secure:false,
             sameSite:"lax"
         });
-        return res.json({success:true,message:"Logged out successfully!"});
+        return res.json({success:true,message:"Logged Out Successfully!"});
     } catch (error) {
         console.log(error);
         return res.json({success:false,message:error.message});
@@ -114,7 +114,14 @@ const googleLogin=async(req,res)=>{
         return res.json({success:false,message:"This email is already registered via password login"});
         }
         if(!user){
+            let normalizedUserName=given_name?.toLowerCase().trim()||normalizedEmail.split("@")[0];
+            let count=1;
+            while(await userModel.findOne({userName:normalizedUserName})){
+                normalizedUserName=`${normalizedUserName}${count}`;
+                count++;
+            }
            user=new userModel({
+            userName:normalizedUserName,
             email:normalizedEmail,
             firstName:given_name,
             lastName:family_name||"N/A",

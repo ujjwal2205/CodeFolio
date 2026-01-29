@@ -1,13 +1,12 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
 
-function Header() {
+function Header({login}) {
+  useEffect(()=>{
+  },[login]);
     const isAuthenticated=()=>{
-        if(localStorage.getItem("token")){
-            return true;
-        }
-        return false;
+        return login;
     }
   return (
     <section className="header">
@@ -28,9 +27,12 @@ function Header() {
           </p>
 
           <div className="header-cta">
-            <Link to="/signUp" className="cta-primary">
+            {!isAuthenticated()?<Link to="/signUp" className="cta-primary">
               Create Your CodeFolio
-            </Link>
+            </Link>:<Link to="/dashboard" className="cta-primary">
+              My Coding Hub
+            </Link>}
+            
             {isAuthenticated()?
             <Link to="/leaderboard" className="cta-link">
               Explore Leaderboard →

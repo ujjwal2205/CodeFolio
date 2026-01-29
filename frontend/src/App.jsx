@@ -9,17 +9,17 @@ import SignUpPage from './Pages/SignUpPage/SignUpPage.jsx';
 import {Route,Routes} from 'react-router-dom';
 import Footer from './Components/Footer/Footer.jsx';
 function App() {
-  const [login,setLogin]=useState(true);
+  const [login,setLogin]=useState(false);
   return (
     <div>
     <ToastContainer/>
       <Navbar login={login} setLogin={setLogin}/>
       <Routes>
-      <Route path='/' element={<HomePage/>}/>
+      <Route path='/' element={<HomePage login={login}/>}/>
       <Route path='/about' element={<AboutUsPage/>}/>
-      <Route path='/login' element={<LoginPage/>}/>
+      <Route path='/login' element={<LoginPage login={login} setLogin={setLogin}/>}/>
       <Route path='/forgot-password' element={<ForgotPasswordPage/>}/>
-      <Route path='/signup' element={<SignUpPage/>}/>
+      <Route path='/signup' element={<SignUpPage login={login} setLogin={setLogin}/>}/>
       </Routes>
       <Footer/>
     </div>

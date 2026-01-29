@@ -1,21 +1,40 @@
-import React,{useState,useEffect,useRef} from 'react';
+import React,{useState,useEffect,useRef,useContext} from 'react';
+import { StoreContext } from '../../context/StoreContext.jsx';
 import { Link } from 'react-router-dom';
 import {FaUserCircle} from "react-icons/fa"
 import './Navbar.css';
+import { useLocation } from 'react-router-dom';
+import axios from "axios";
+import { toast } from 'react-toastify';
 function Navbar({login,setLogin}) {
+    const {url}=useContext(StoreContext);
+    const location=useLocation();
     const [dropdown,setDropdown]=useState(false);
     const dropdownRef=useRef(null);
     useEffect(()=>{
         const handleClickOutside=(event)=>{
-            if(!dropdownRef.current.contains(event.target)){
+            if(!dropdownRef.current?.contains(event.target)){
                 setDropdown(false);
             }
         };
         document.addEventListener("mousedown",handleClickOutside);
     },[]);
+    
     const toggleDropdown=()=>setDropdown((prev)=>!prev);
-    const handleLogout=()=>{
-        setLogin(false);
+    const handleLogout=async(e)=>{
+        try {
+            const response=await axios.post(url+"/api/user/logOut",{},{ withCredentials: true });
+            if(response.data.success){
+                setLogin(false);
+                toast.success(response.data.message);
+            }
+            else{
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message);
+        }
     }
   return (
     <div className='Navbar'>

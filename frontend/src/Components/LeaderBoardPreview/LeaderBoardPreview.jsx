@@ -1,17 +1,18 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { FaLock, FaTrophy } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "./LeaderBoardPreview.css";
 
-function LeaderBoardPreview() {
+function LeaderBoardPreview({login}) {
   const leaders = [
     { rank: 1, name: "coder_***", score: "9120 pts" },
     { rank: 2, name: "dev_***", score: "8840 pts" },
     { rank: 3, name: "algo_***", score: "8605 pts" },
   ];
-
+  useEffect(()=>{
+  },[login]);
   const isAuthenticated = () => {
-    return !!localStorage.getItem("token");
+    return login;
   };
 
   const loggedIn = isAuthenticated();
