@@ -1,0 +1,11 @@
+import { linkedInChange,twitterChange,leetcodeHandleChange,codeChefHandleChange,codeForcesHandleChange,userNameChange  } from "../Controllers/changeController.js";
+import authMiddleware from "../Middlewares/authMiddleware.js";
+import express from "express";
+const changeRouter=express.Router();
+changeRouter.post("/leetCodeHandle",leetcodeHandleChange);
+changeRouter.post("/codeForcesHandle",codeForcesHandleChange);
+changeRouter.post("/codeChefHandle",codeChefHandleChange);
+changeRouter.post("/userName",userNameChange);
+changeRouter.post("/linkedInChange",linkedInChange);
+changeRouter.post("/XChange",twitterChange);
+export default changeRouter;

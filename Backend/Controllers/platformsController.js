@@ -65,7 +65,7 @@ const LeetCode=async(req,res)=>{
                 variables:{username:user.leetCode}
             })
         });
-       const response2 = await axios.get(`https://alfa-leetcode-api.onrender.com/${user.leetcode}/contest`,{
+       const response2 = await axios.get(`https://alfa-leetcode-api.onrender.com/${user.leetCode}/contest`,{
         timeout:30000
        });
         const result1=await response1.json();

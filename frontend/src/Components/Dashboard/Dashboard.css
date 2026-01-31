@@ -1,0 +1,6 @@
+.dashboard-root {
+  display: flex;
+  height: 100vh;
+  background: #0b0d10;
+  color: #fff;
+}

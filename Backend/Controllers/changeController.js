@@ -1,4 +1,36 @@
 import userModel from "../models/userModel.js";
+const linkedInChange=async(req,res)=>{
+ const {email,handle}=req.body;
+ try {
+    const normalizedEmail=email.toLowerCase();
+    const user=await userModel.findOne({email:normalizedEmail});
+    if(!user){
+        return res.json({success:false,message:"user doesn't exist"});
+    }
+    user.linkedIn=handle;
+    await user.save();
+    return res.json({success:true,message:"LinkedIn handle changed successfully"});
+ } catch (error) {
+    console.log(error);
+    return res.json({success:false,message:error.message});
+ }
+}
+const twitterChange=async(req,res)=>{
+    const{email,handle}=req.body;
+    try {
+    const normalizedEmail=email.toLowerCase();
+    const user=await userModel.findOne({email:normalizedEmail});
+    if(!user){
+        return res.json({success:false,message:"user doesn't exist"});
+    }
+    user.twitter=handle;
+    await user.save();
+    return res.json({success:true,message:"X handle changed successfully"});
+}
+catch(error){
+    console.log(error);
+    return res.json({success:false,message:error.message});
+}}
 const leetcodeHandleChange=async(req,res)=>{
     const {email,handle}=req.body;
     try {
@@ -74,4 +106,4 @@ const userNameChange=async(req,res)=>{
         return res.json({success:false,message:error.message});
     }
 }
-export {leetcodeHandleChange,codeForcesHandleChange,codeChefHandleChange,userNameChange};
+export {leetcodeHandleChange,codeForcesHandleChange,codeChefHandleChange,userNameChange,linkedInChange,twitterChange};

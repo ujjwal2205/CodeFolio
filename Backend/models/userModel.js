@@ -27,7 +27,9 @@ const userSchema=new mongoose.Schema({
     leetCodeSolved:{type:Number,default:0},
     codeForcesRating:{type:Number,default:0},
     codeChefRating:{type:Number,default:0},
-    score:{type:Number,default:0}
+    score:{type:Number,default:0},
+    linkedIn:{type:String,default:""},
+    twitter:{type:String,default:""}
 });
 const userModel=mongoose.models.user || mongoose.model("user",userSchema);
 export default userModel

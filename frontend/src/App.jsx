@@ -6,8 +6,10 @@ import AboutUsPage from './Pages/AboutUsPage/AboutUsPage.jsx';
 import LoginPage from './Pages/LoginPage/LoginPage.jsx';
 import ForgotPasswordPage from './Pages/ForgotPasswordPage/ForgotPasswordPage.jsx';
 import SignUpPage from './Pages/SignUpPage/SignUpPage.jsx';
+import DashboardPage from './Pages/DashboardPage/DashboardPage.jsx';
 import {Route,Routes} from 'react-router-dom';
 import Footer from './Components/Footer/Footer.jsx';
+import Dashboard from './Components/Dashboard/Dashboard.jsx';
 function App() {
   const [login,setLogin]=useState(false);
   return (
@@ -20,6 +22,7 @@ function App() {
       <Route path='/login' element={<LoginPage login={login} setLogin={setLogin}/>}/>
       <Route path='/forgot-password' element={<ForgotPasswordPage/>}/>
       <Route path='/signup' element={<SignUpPage login={login} setLogin={setLogin}/>}/>
+      <Route path='/dashboard' element={<Dashboard/>}/>
       </Routes>
       <Footer/>
     </div>
