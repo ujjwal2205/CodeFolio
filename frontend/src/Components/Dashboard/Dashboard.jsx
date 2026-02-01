@@ -1,15 +1,119 @@
-import { useState } from "react";
-import LeftSidebar from "../LeftSidebar/LeftSidebar.jsx";
-import RightSidebar from "../RightSidebar/RightSidebar.jsx";
-import "./Dashboard.css";
-
-export default function Dashboard() {
-  const [active, setActive] = useState("overview");
-
-  return (
-    <div className="dashboard-root">
-      <LeftSidebar active={active} setActive={setActive} />
-      <RightSidebar active={active} />
-    </div>
-  );
-}
+  import { useState,useEffect,useContext } from "react";
+  import LeftSidebar from "../LeftSidebar/LeftSidebar.jsx";
+  import RightSidebar from "../RightSidebar/RightSidebar.jsx";
+  import { StoreContext } from "../../context/StoreContext.jsx";
+  import { toast } from "react-toastify";
+  import "./Dashboard.css";
+  import axios from "axios";
+  export default function Dashboard() {
+    const [active, setActive] = useState("overview");
+    const {url}=useContext(StoreContext);
+    const [data,setData]=useState({
+      "userName":"",
+      "email":"",
+      "linkedIn":"",
+      "twitter":"",
+      "leetCode":null,
+      "codeChef":null,
+      "codeForces":null,
+      "leaderboardRank":null,
+    });
+    useEffect(()=>{
+      const fetchData=async()=>{
+        try {
+          const lcRes=await axios.post(url+"/api/site/leetcode",{},{withCredentials:true});
+          const ccRes=await axios.post(url+"/api/site/codeChef",{},{withCredentials:true});
+          const cfRes=await axios.post(url+"/api/site/codeForces",{},{withCredentials:true});
+          const leaderBoard=await axios.post(url+"/api/Leaderboard/fetchLeaderBoard",{},{withCredentials:true});
+          if(lcRes.data.success){
+            const user=lcRes.data.data.data.matchedUser;
+            setData(prev=>({...prev,leetCode:{
+              userName:user.username,
+              solvedStats:user.submitStats.acSubmissionNum,
+              contest:lcRes.data.contest
+            },
+          email:lcRes.data.email,
+          linkedIn:lcRes.data.linkedIn,
+          twitter:lcRes.data.twitter,
+          userName:lcRes.data.userName}));
+          }
+          else{
+            if(lcRes.data.message==="LeetCode handle not provided"){
+              console.log(lcRes.data.message);
+            }
+            else{
+            console.log(lcRes.data.message);
+            toast.error("We couldn’t fetch your LeetCode data right now. Please try again shortly.");
+          }}
+          if(ccRes.data.success){
+            const user=ccRes.data;
+            setData(prev=>({...prev,codeChef:{
+              userName:ccRes.data.userName,
+              rating:user.rating,
+              highestRating:user.highestRating,
+              stars:user.stars,
+              contestParticipated:user.contestParticipated,
+              problemsSolved:user.problemsSolved
+            },
+            email:ccRes.data.email,
+            linkedIn:ccRes.data.linkedIn,
+            twitter:ccRes.data.twitter,
+             userName:ccRes.data.userName
+          }))
+          }
+          else{
+            if(ccRes.data.message==="CodeChef handle not provided."){
+              console.log(ccRes.data.message);
+            }
+            else{
+            console.log(ccRes.data.message);
+            toast.error(ccRes.data.message);
+            }
+          }
+          if(cfRes.data.success){
+            const user=cfRes.data;
+            setData(prev=>({...prev,codeForces:{
+              rating:user.data.rating,
+              rank:user.data.rank,
+              userName:user.data.handle,
+              maxRating:user.data.maxRating,
+              maxRank:user.data.maxRank,
+              problemsSolved:user.totalSolved,
+              contest:user.contest,
+            },
+            email:cfRes.data.email,
+            linkedIn:cfRes.data.linkedIn,
+            twitter:cfRes.data.twitter,
+            userName:cfRes.data.userName
+          }))
+          }
+          else{
+            if(cfRes.data.message==="CodeForces handle not provided"){
+            console.log(cfRes.data.message);
+            }
+            else{
+            console.log(cfRes.data.message);
+            toast.error(cfRes.data.message);
+            }
+          }
+          if(leaderBoard.data.success){
+            setData(prev=>({...prev,leaderboardRank:leaderBoard.data.myRank}));
+          }
+          else{
+            toast.error(leaderBoard.data.message);
+            console.log(leaderBoard.data.message);
+          }
+        } catch (error) {
+          toast.error(error.message);
+          console.log(error);
+        }
+      }
+      fetchData();
+    },[]);
+    return (
+      <div className="dashboard-root">
+        <LeftSidebar active={active} setActive={setActive} data={data}/>
+        <RightSidebar active={active} data={data}/>
+      </div>
+    );
+  }

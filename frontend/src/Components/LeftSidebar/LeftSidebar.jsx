@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 import { FiEdit } from "react-icons/fi";
 import { FaEnvelope, FaLinkedin, FaXTwitter, FaTrophy, FaChevronDown } from "react-icons/fa6";
@@ -7,7 +7,7 @@ import './LeftSidebar.css';
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
 
-export default function LeftSidebar({ active, setActive }) {
+export default function LeftSidebar({ active, setActive,data }) {
   const [psDropdown, setPsDropdown] = useState(true);
 
   const user = {
@@ -22,46 +22,47 @@ export default function LeftSidebar({ active, setActive }) {
     leaderboardRank: 2300,
     handle: "ujjwal2202"
   };
-
+  useEffect(()=>{
+    console.log(data.userName);
+  })
   return (
     <aside className="sidebar">
       <div className="profile-box">
         <div className="edit-profile-btn">
           <Link to="/edit"><FiEdit /></Link>
         </div>
-        <div className="avatar">U</div>
-        <h3>{user.name}</h3>
-        <p>@{user.username}</p>
+        <div className="avatar">{data.userName[0]?.toUpperCase()}</div>
+        <h3>@{data.userName}</h3>
       </div>
 
       <div className="social-row">
         <FaEnvelope
-          className={user.email ? "icon active" : "icon disabled"}
+          className={data.email!=="" ? "icon active" : "icon disabled"}
           onClick={() => {
-            if (user.email) {
-              navigator.clipboard.writeText("ujjwal22@gmail.com");
+            if (data.email!=="") {
+              navigator.clipboard.writeText(`${data.email}`);
               toast.success("Email copied to clipboard.");
             }
           }}
-          title={user.email && "ujjwal22@gmail.com"}
+          title={data.email!=="" && `${data.email}`}
         />
         <FaLinkedin
-          className={user.linkedin ? "icon active" : "icon disabled"}
+          className={data.linkedIn!="" ? "icon active" : "icon disabled"}
           onClick={() => {
-            if (user.linkedin) {
-              window.open(`https://www.linkedin.com/in/${user.handle}`, "_blank");
+            if (data.linkedIn!="") {
+              window.open(`https://www.linkedin.com/in/${data.linkedIn}`, "_blank");
             }
           }}
-          title={user.linkedin && `https://www.linkedin.com/in/${user.handle}`}
+          title={data.linkedIn!=="" && `https://www.linkedin.com/in/${data.linkedIn}`}
         />
         <FaXTwitter
-          className={user.twitter ? "icon active" : "icon disabled"}
+          className={data.twitter!=="" ? "icon active" : "icon disabled"}
           onClick={() => {
-            if (user.twitter) {
-              window.open(`https://x.com/${user.handle}`, "_blank");
+            if (data.twitter!=="") {
+              window.open(`https://x.com/${data.twitter}`, "_blank");
             }
           }}
-          title={user.twitter && `https://x.com/${user.handle}`}
+          title={data.twitter!=="" && `https://x.com/${data.twitter}`}
         />
       </div>
 
@@ -89,31 +90,31 @@ export default function LeftSidebar({ active, setActive }) {
         </div>
         {psDropdown && (
           <div className="submenu">
-            {user.leetcode && (
+            {data.leetCode && (
               <MenuItemWithLink
                 icon={<SiLeetcode />}
                 label="LeetCode"
                 active={active === "leetCode"}
                 onClick={() => setActive("leetCode")}
-                url={`https://www.leetcode.com/u/${user.handle}`}
+                url={`https://www.leetcode.com/u/${data.leetCode.userName}`}
               />
             )}
-            {user.codechef && (
+            {data.codeChef && (
               <MenuItemWithLink
                 icon={<SiCodechef />}
                 label="CodeChef"
                 active={active === "codeChef"}
                 onClick={() => setActive("codeChef")}
-                url={`https://www.codechef.com/users/${user.handle}`}
+                url={`https://www.codechef.com/users/${data.codeChef.userName}`}
               />
             )}
-            {user.codeforces && (
+            {data.codeForces && (
               <MenuItemWithLink
                 icon={<SiCodeforces />}
                 label="CodeForces"
                 active={active === "codeForces"}
                 onClick={() => setActive("codeForces")}
-                url={`https://codeforces.com/profile/${user.handle}`}
+                url={`https://codeforces.com/profile/${data.codeForces.userName}`}
               />
             )}
           </div>
@@ -122,7 +123,7 @@ export default function LeftSidebar({ active, setActive }) {
 
       <div className="leaderboard-box">
         <FaTrophy />
-        <h2>{user.leaderboardRank}</h2>
+        <h2>{data.leaderboardRank}</h2>
         <p>Leaderboard Rank</p>
         <button className="view-btn">View Leaderboard</button>
       </div>

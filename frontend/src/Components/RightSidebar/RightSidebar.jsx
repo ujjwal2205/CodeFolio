@@ -4,18 +4,18 @@ import {
   AreaChart, Area, PieChart, Pie, Cell, Tooltip, ResponsiveContainer, XAxis, YAxis
 } from "recharts";
 import { SiLeetcode,SiCodeforces,SiCodechef } from "react-icons/si";
-export default function RightSidebar({ active }) {
+function RightSidebar({ active,data }) {
   const [ratingPlatform, setRatingPlatform] = useState("leetCode");
 
   const dsaData = [
-    { name: "Easy", value: 310, color: "#22c55e" },
-    { name: "Medium", value: 220, color: "#facc15" },
-    { name: "Hard", value: 48, color: "#ef4444" },
+    { name: "Easy", value: data.leetCode?.solvedStats[1].count||0, color: "#22c55e" },
+    { name: "Medium", value: data.leetCode?.solvedStats[2].count||0, color: "#facc15" },
+    { name: "Hard", value: data.leetCode?.solvedStats[3].count||0, color: "#ef4444" },
   ];
 
   const cpData = [
-    { name: "CodeChef", value: 62, color: "#22c55e" },
-    { name: "CodeForces", value: 25, color: "#facc15" },
+    { name: "CodeChef", value: data.codeChef?.problemsSolved||0, color: "#22c55e" },
+    { name: "CodeForces", value: data.codeForces?.problemsSolved||0, color: "#facc15" },
   ];
 
   return (
@@ -24,21 +24,22 @@ export default function RightSidebar({ active }) {
         <div className="main-viewport">
           
           <div className="stats-header-row">
-            <StatCard title="Total Questions" value="665" />
-            <StatCard title="DSA Questions" value="578" />
-            <StatCard title="CP Questions" value="87" />
+            <StatCard title="Total Questions" value={(data.leetCode?.solvedStats[0].count||0)+(data.codeChef?.problemsSolved||0)+(data.codeForces?.problemsSolved||0)} />
+            <StatCard title="DSA Questions" value={data.leetCode?.solvedStats[0].count||0} />
+            <StatCard title="CP Questions" value={(data.codeChef?.problemsSolved||0)+(data.codeForces?.problemsSolved||0)} />
           </div>
 
           <div className="dashboard-body-grid-half">
-            
+            {(data.leetCode?.contest?.contestAttend>0 || data.codeChef?.contestParticipated!=0 || data.codeForces?.contest.length!=0) && <>
             <div className="col-balanced">
               <div className="glass-card contest-box-main">
                 <div className="contest-flex-ui">
                   <div className="contest-big">
                     <p>Total Contests</p>
-                    <h1>20</h1>
+                    <h1>{(data.codeChef?.contestParticipated||0)+(data.codeForces?.contest.length||0)+(data.leetCode?.contest.contestAttend||0)}</h1>
                   </div>
                   <div className="platform-breakdown-list">
+                    {data.leetCode?.contest?.contestAttend>0 && <>
                     <button 
                     className={`p-list-btn ${ratingPlatform === "leetCode" ? "active" : ""}`}
                     onClick={() => setRatingPlatform("leetCode")}
@@ -47,9 +48,11 @@ export default function RightSidebar({ active }) {
                    <SiLeetcode />
                    <span>Leetcode</span>
                    </div>
-                  <strong>17</strong>
+                  <strong>{data.leetCode?.contest.contestAttend||0}</strong>
                   </button>
-
+                  </>}
+                  {(data.codeForces!=null && data.codeForces?.contest.length!=0) && 
+                  <>
                   <button 
                   className={`p-list-btn ${ratingPlatform === "codeforces" ? "active" : ""}`}
                   onClick={() => setRatingPlatform("codeforces")}
@@ -58,8 +61,11 @@ export default function RightSidebar({ active }) {
                   <SiCodeforces />
                    <span>CodeForces</span>
                    </div>
-                  <strong>13</strong>
+                  <strong>{data.codeForces?.contest.length||0}</strong>
                   </button>
+                  </>
+                  }
+                  {(data.codeChef!=null && data.codeChef?.contestParticipated!=0) && <>
                    <button 
                   className={`p-list-btn ${ratingPlatform === "codeChef" ? "active" : ""}`}
                   onClick={() => setRatingPlatform("codeChef")}
@@ -68,8 +74,9 @@ export default function RightSidebar({ active }) {
                   <SiCodechef />
                    <span>CodeChef</span>
                    </div>
-                  <strong>13</strong>
+                  <strong>{data.codeChef?.contestParticipated||0}</strong>
                   </button>
+                  </>}
                   </div>
                 </div>
               </div>
@@ -79,49 +86,56 @@ export default function RightSidebar({ active }) {
                 <div className="g-meta-header">
                   <div className="r-display">
                     <p>Rating</p>
-                    <h2>{ratingPlatform === "leetCode" ? "1428" : "987"}</h2>
+                    <h2>{ratingPlatform === "leetCode" ? Math.floor(data.leetCode?.contest.contestRating ||0) : data.codeForces?.rating||0}</h2>
                   </div>
                 </div>
                   }
                 <div className="chart-box-ui">
-                  <RatingGraph platform={ratingPlatform} />
+                  <RatingGraph platform={ratingPlatform} data={data} />
                 </div>
               </div>
             </div>
-
+            </>}
             <div className="col-balanced">
-              <PieSectionCard title="DSA" data={dsaData} total="578" />
-              <PieSectionCard title="Competitive Programming" data={cpData} total="87" />
-
+              {data.leetCode!=null && <>
+              <PieSectionCard title="DSA" data={dsaData} total={data.leetCode?.solvedStats[0].count||0} />
+              </>}
+              {(data.codeChef!=null || data.codeForces!=null)&&<>
+              <PieSectionCard title="Competitive Programming" data={cpData} total={(data.codeChef?.problemsSolved||0)+(data.codeForces?.problemsSolved||0)} />
+              </>}
+              {(data.codeChef!=null || data.codeForces?.contest.length>0)&&<>
               <div className="glass-card ranking-footer-card">
                 <h3 className="section-label-ui">Contest Rankings</h3>
-                
+                {data.codeChef?.contestParticipated>0 && <>
                 <div className="ranking-platform-section">
                   <p className="platform-name-tag">CODECHEF</p>
                   <div className="ranking-content-flex">
                     <div className="stars-badge-container">
-                      <span className="star-ui-icon">★</span>
-                      <span className="star-ui-icon">★</span>
+                      {[...Array(data.codeChef?.stars || 0)].map((_, i) => (
+                     <span key={i} className="star-ui-icon">★</span>
+                     ))}                   
                     </div>
                     <div className="score-main-stack">
-                      <h1>1428</h1>
-                      <small>(max : 1489)</small>
+                      <h1>{data.codeChef?.rating}</h1>
+                      <small>(max : {data.codeChef?.highestRating})</small>
                     </div>
                   </div>
                 </div>
-
+                 </>}
+                 {data.codeForces?.contest.length>0 && <>
                 <div className="ranking-platform-section">
                   <p className="platform-name-tag">CODEFORCES</p>
                   <div className="ranking-content-flex">
-                    <div className="rank-label-tag">Newbie</div>
+                    <div className="rank-label-tag">{data.codeForces?.rank}</div>
                     <div className="score-main-stack">
-                      <h1>987</h1>
-                      <small>(max : 987)</small>
+                      <h1>{data.codeForces?.rating}</h1>
+                      <small>(max : {data.codeForces?.maxRating})</small>
                     </div>
                   </div>
                 </div>
+                </>}
               </div>
-
+               </> }
             </div>
           </div>
         </div>
@@ -130,17 +144,17 @@ export default function RightSidebar({ active }) {
         <div className="lc-main-viewport">
           
           <div className="lc-stats-header-row">
-            <StatCard title="Total Questions" value="578" />
+            <StatCard title="Total Questions" value={data.leetCode?.solvedStats[0].count||0} />
           </div>
 
           <div className="lc-dashboard-body-grid-half">
-            
+            {data.leetCode?.contest?.contestAttend>0 && <>
             <div className="lc-col-balanced">
               <div className="lc-glass-card contest-box-main">
                 <div className="lc-contest-flex-ui">
                   <div className="contest-big">
                     <p>Total Contests</p>
-                    <h1>20</h1>
+                    <h1>{data.leetCode?.contest.contestAttend||0}</h1>
                   </div>
                   <div className="lc-platform-breakdown-list">
                     <button 
@@ -150,7 +164,7 @@ export default function RightSidebar({ active }) {
                    <SiLeetcode />
                    <span>Leetcode</span>
                    </div>
-                  <strong>20</strong>
+                  <strong>{data.leetCode?.contest.contestAttend||0}</strong>
                   </button>
 
                   </div>
@@ -161,17 +175,17 @@ export default function RightSidebar({ active }) {
                 <div className="lc-g-meta-header">
                   <div className="lc-r-display">
                     <p>Rating</p>
-                    <h2> 1428</h2>
+                    <h2>{Math.floor(data.leetCode?.contest.contestRating||0)}</h2>
                   </div>
                 </div>
                 <div className="lc-chart-box-ui">
-                  <RatingGraph platform={"leetCode"} />
+                  <RatingGraph platform={"leetCode"} data={data}/>
                 </div>
               </div>
             </div>
-
+            </>}
             <div className="lc-col-balanced">
-              <PieSectionCard title="DSA" data={dsaData} total="578" />
+              <PieSectionCard title="DSA" data={dsaData} total={data.leetCode?.solvedStats[0].count||0} />
             </div>
           </div>
         </div>
@@ -180,17 +194,17 @@ export default function RightSidebar({ active }) {
         <div className="cc-main-viewport">
           
           <div className="cc-stats-header-row">
-            <StatCard title="Total Questions" value="62" />
+            <StatCard title="Total Questions" value={data.codeChef?.problemsSolved||0} />
           </div>
 
           <div className="cc-dashboard-body-grid-half">
-            
+            {data.codeChef!=null && <>
             <div className="cc-col-balanced">
               <div className="cc-glass-card contest-box-main">
                 <div className="cc-contest-flex-ui">
                   <div className="cc-contest-big">
                     <p>Total Contests</p>
-                    <h1>13</h1>
+                    <h1>{data.codeChef?.contestParticipated||0}</h1>
                   </div>
                   <div className="cc-platform-breakdown-list">
                     <button 
@@ -201,7 +215,7 @@ export default function RightSidebar({ active }) {
                    <SiCodechef />
                    <span>CodeChef</span>
                    </div>
-                  <strong>13</strong>
+                  <strong>{data.codeChef?.contestParticipated||0}</strong>
                   </button>
 
                   </div>
@@ -209,7 +223,8 @@ export default function RightSidebar({ active }) {
               </div>
 
             </div>
-
+            </>}
+             {data.codeChef?.contestParticipated>0 && <>
             <div className="cc-col-balanced">
               <div className="cc-glass-card ranking-footer-card">
                 <h3 className="cc-section-label-ui">Contest Rankings</h3>
@@ -218,12 +233,13 @@ export default function RightSidebar({ active }) {
                   <p className="cc-platform-name-tag">CODECHEF</p>
                   <div className="cc-ranking-content-flex">
                     <div className="cc-stars-badge-container">
-                      <span className="cc-star-ui-icon">★</span>
-                      <span className="cc-star-ui-icon">★</span>
+                      {[...Array(data.codeChef?.stars || 0)].map((_, i) => (
+                     <span key={i} className="star-ui-icon">★</span>
+                     ))} 
                     </div>
                     <div className="cc-score-main-stack">
-                      <h1>1428</h1>
-                      <small>(max : 1489)</small>
+                      <h1>{data.codeChef?.rating}</h1>
+                      <small>(max : {data.codeChef?.highestRating})</small>
                     </div>
                   </div>
                 </div>
@@ -231,6 +247,7 @@ export default function RightSidebar({ active }) {
               </div>
 
             </div>
+            </>}
           </div>
         </div>
       )}
@@ -238,17 +255,17 @@ export default function RightSidebar({ active }) {
         <div className="cf-main-viewport">
           
           <div className="cf-stats-header-row">
-            <StatCard title="Total Questions" value="25" />
+            <StatCard title="Total Questions" value={data.codeForces?.problemsSolved ||0} />
           </div>
 
           <div className="cf-dashboard-body-grid-half">
-            
+            {data.codeForces?.contest.length>0 && <>
             <div className="cf-col-balanced">
               <div className="cf-glass-card contest-box-main">
                 <div className="cf-contest-flex-ui">
                   <div className="cf-contest-big">
                     <p>Total Contests</p>
-                    <h1>13</h1>
+                    <h1>{data.codeForces?.contest.length || 0}</h1>
                   </div>
                   <div className="cf-platform-breakdown-list">
 
@@ -260,7 +277,7 @@ export default function RightSidebar({ active }) {
                   <SiCodeforces />
                    <span>CodeForces</span>
                    </div>
-                  <strong>13</strong>
+                  <strong>{data.codeForces?.contest.length ||0}</strong>
                   </button>
                   </div>
                 </div>
@@ -271,16 +288,15 @@ export default function RightSidebar({ active }) {
                 <div className="cf-g-meta-header">
                   <div className="cf-r-display">
                     <p>Rating</p>
-                    <h2>987</h2>
+                    <h2>{data.codeForces?.rating || 0}</h2>
                   </div>
                 </div>
                   }
                 <div className="cf-chart-box-ui">
-                  <RatingGraph platform={"codeForces"} />
+                  <RatingGraph platform={"codeForces"} data={data}/>
                 </div>
               </div>
             </div>
-
             <div className="cf-col-balanced">
               <div className="cf-glass-card ranking-footer-card">
                 <h3 className="cf-section-label-ui">Contest Rankings</h3>
@@ -288,16 +304,17 @@ export default function RightSidebar({ active }) {
                 <div className="cf-ranking-platform-section">
                   <p className="cf-platform-name-tag">CODEFORCES</p>
                   <div className="cf-ranking-content-flex">
-                    <div className="cf-rank-label-tag">Newbie</div>
+                    <div className="cf-rank-label-tag">{data.codeForces?.rank || ""}</div>
                     <div className="cf-score-main-stack">
-                      <h1>987</h1>
-                      <small>(max : 987)</small>
+                      <h1>{data.codeForces?.rating ||0}</h1>
+                      <small>(max : {data.codeForces?.rating||0})</small>
                     </div>
                   </div>
                 </div>
               </div>
 
             </div>
+            </>}
           </div>
         </div>
       )}
@@ -342,53 +359,35 @@ function PieSectionCard({ title, data, total }) {
   );
 }
 
-function RatingGraph({ platform }) {
-  const data =
-    platform === "leetCode"
-      ? [
-          {
-            rating: 1410,
-            contest: "Weekly Contest 379",
-            time: "Dec 20, 2025"
-          },
-          {
-            rating: 1425,
-            contest: "Weekly Contest 380",
-            time: "Dec 27, 2025"
-          },
-          {
-            rating: 1415,
-            contest: "Weekly Contest 381",
-            time: "Jan 03, 2026"
-          },
-          {
-            rating: 1428,
-            contest: "Weekly Contest 382",
-            time: "Jan 10, 2026"
-          }
-        ]
-      : [
-          {
-            rating: 850,
-            contest: "CF Round #920",
-            time: "Dec 18, 2025"
-          },
-          {
-            rating: 920,
-            contest: "CF Round #925",
-            time: "Jan 02, 2026"
-          },
-          {
-            rating: 987,
-            contest: "CF Round #931",
-            time: "Jan 15, 2026"
-          }
-        ];
+function RatingGraph({ platform,data }) {
+  
   if (platform === "codeChef") return null;
-  return (
+  const chartData =
+  platform === "leetCode"
+        ? data.leetCode?.contest?.contestParticipation?.map(c => ({
+        rating: Math.floor(c.rating),
+        contest: c.contest.title,
+        time: new Date(c.contest.startTime * 1000)
+          .toLocaleDateString("en-US", {
+            month: "short",
+            day: "2-digit",
+            year: "numeric"
+          })
+      })) || []
+    : data.codeForces?.contest?.map(c=>({
+      rating:c.newRating,
+      contest:c.contestName,
+      time:new Date(c.ratingUpdateTimeSeconds*1000).toLocaleDateString("en-US",{
+        month:"short",
+        day:"2-digit",
+        year:"numeric"
+      })
+    }))||[];
+  return(
+    platform==="leetCode"?(
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart
-        data={data}
+        data={chartData}
       >
         <defs>
           <linearGradient id="chartG" x1="0" y1="0" x2="0" y2="1">
@@ -439,5 +438,63 @@ function RatingGraph({ platform }) {
         <YAxis  domain={["dataMin - 50", "dataMax + 50"]} />
       </AreaChart>
     </ResponsiveContainer>
-  );
-}
+
+    ):(
+      <ResponsiveContainer width="100%" height="100%">
+      <AreaChart
+        data={chartData}
+      >
+        <defs>
+          <linearGradient id="chartG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#d97706" stopOpacity={0.4} />
+            <stop offset="95%" stopColor="#d97706" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+
+        <Tooltip
+          cursor={{ stroke: "#fbbf24", strokeWidth: 0 }}
+          content={({ active, payload }) => {
+            if (active && payload && payload.length) {
+              const d = payload[0].payload;
+              return (
+                <div
+                  style={{
+                    background: "#1f212a",
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    border: "1px solid #2a2e38",
+                    color: "#fff"
+                  }}
+                >
+                  <strong>{d.contest}</strong>
+                  <p style={{ fontSize: "0.8rem", margin: "4px 0" }}>
+                    {d.time}
+                  </p>
+                  <p style={{ color: "#fbbf24" }}>
+                    Rating: {d.rating}
+                  </p>
+                </div>
+              );
+            }
+            return null;
+          }}
+        />
+
+        <Area
+          type="monotone"
+          dataKey="rating"
+          stroke="#d97706"
+          fill="url(#chartG)"
+          strokeWidth={3}
+          activeDot={{ r: 6 }}
+        />
+
+        <XAxis hide />
+        <YAxis  domain={["dataMin - 50", "dataMax + 50"]} />
+      </AreaChart>
+    </ResponsiveContainer>
+    
+    ))}
+  ;
+
+export default RightSidebar;
