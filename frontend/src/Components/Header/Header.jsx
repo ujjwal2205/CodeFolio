@@ -37,7 +37,7 @@ function Header({login}) {
             <Link to="/leaderboard" className="cta-link">
               Explore Leaderboard →
             </Link>
-            :<Link to="signUp" className="cta-link">
+            :<Link to="login" className="cta-link">
               Explore Leaderboard →
             </Link>
             }

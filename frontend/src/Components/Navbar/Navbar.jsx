@@ -47,7 +47,8 @@ function Navbar({login,setLogin}) {
             <Link to="/"><h2>Home</h2></Link>
             <Link to="/about"><h2>About Us</h2></Link>
             <Link to="/#why-codefolio"><h2>Why CodeFolio</h2></Link>
-            <Link to="/leaderboard"><h2>Leaderboard</h2></Link>
+            {login?<Link to="/leaderboard"><h2>Leaderboard</h2></Link>:<Link to="/login"><h2>Leaderboard</h2></Link>}
+            
         </div>
         <div className='right-container'>
         {!login?(

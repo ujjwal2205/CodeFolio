@@ -10,18 +10,7 @@ import { toast } from "react-toastify";
 export default function LeftSidebar({ active, setActive,data }) {
   const [psDropdown, setPsDropdown] = useState(true);
 
-  const user = {
-    name: "Ujjwal Gupta",
-    username: "ujjwal22",
-    email: true,
-    linkedin: true,
-    twitter: false,
-    leetcode: true,
-    codechef: true,
-    codeforces: true,
-    leaderboardRank: 2300,
-    handle: "ujjwal2202"
-  };
+
   useEffect(()=>{
     console.log(data.userName);
   })
@@ -125,7 +114,7 @@ export default function LeftSidebar({ active, setActive,data }) {
         <FaTrophy />
         <h2>{data.leaderboardRank}</h2>
         <p>Leaderboard Rank</p>
-        <button className="view-btn">View Leaderboard</button>
+        <Link to="/leaderboard"><button className="view-btn">View Leaderboard</button></Link>
       </div>
     </aside>
   );
