@@ -1,9 +1,9 @@
 import userModel from "../models/userModel.js";
 const fetchLeaderBoard=async(req,res)=>{
-    const email=req.user.email;
+    const {userName}=req.params;
     try {
-        const normalizedEmail=email.toLowerCase();
-        const user=await userModel.findOne({email:normalizedEmail});
+        const normalizedUserName=userName.toLowerCase().trim();
+        const user=await userModel.findOne({userName:normalizedUserName});
         const myScore=user.score;
         const leaderBoard=await userModel.find({score:{$gte:0}}).sort({score:-1}).select("userName score leetCodeSolved codeForcesRating codeChefRating").lean();
         let currentRank=1;

@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect,useContext } from "react";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 import { FiEdit } from "react-icons/fi";
 import { FaEnvelope, FaLinkedin, FaXTwitter, FaTrophy, FaChevronDown } from "react-icons/fa6";
@@ -6,20 +6,18 @@ import { SiLeetcode, SiCodechef, SiCodeforces } from "react-icons/si";
 import './LeftSidebar.css';
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
-
+import { StoreContext } from "../../context/StoreContext.jsx";
 export default function LeftSidebar({ active, setActive,data }) {
   const [psDropdown, setPsDropdown] = useState(true);
-
-
-  useEffect(()=>{
-    console.log(data.userName);
-  })
+  const {user}=useContext(StoreContext);
   return (
     <aside className="sidebar">
       <div className="profile-box">
+      {user.userName==data.userName &&
         <div className="edit-profile-btn">
           <Link to="/edit"><FiEdit /></Link>
         </div>
+      }
         <div className="avatar">{data.userName[0]?.toUpperCase()}</div>
         <h3>@{data.userName}</h3>
       </div>
@@ -54,9 +52,9 @@ export default function LeftSidebar({ active, setActive,data }) {
           title={data.twitter!=="" && `https://x.com/${data.twitter}`}
         />
       </div>
-
+      {user.userName==data.userName && 
       <button className="codefolio-btn">Get your Codefolio Card</button>
-
+      }
       <div className="menu">
         <div className={`menu-item ${active === "overview" ? "active" : ""}`}>
           <span
@@ -114,7 +112,7 @@ export default function LeftSidebar({ active, setActive,data }) {
         <FaTrophy />
         <h2>{data.leaderboardRank}</h2>
         <p>Leaderboard Rank</p>
-        <Link to="/leaderboard"><button className="view-btn">View Leaderboard</button></Link>
+        <Link to={`/leaderboard`}><button className="view-btn">View Leaderboard</button></Link>
       </div>
     </aside>
   );

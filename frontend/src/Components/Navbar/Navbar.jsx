@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import axios from "axios";
 import { toast } from 'react-toastify';
 function Navbar({login,setLogin}) {
-    const {url}=useContext(StoreContext);
+    const {url,user}=useContext(StoreContext);
     const location=useLocation();
     const [dropdown,setDropdown]=useState(false);
     const dropdownRef=useRef(null);
@@ -68,7 +68,8 @@ function Navbar({login,setLogin}) {
            <FaUserCircle/>
            </div>
            <div className={`user-dropdown ${dropdown?"show":""}`}>
-           <Link to="/dashboard" className='friends-page-btn' onClick={toggleDropdown}>Dashboard</Link>
+           {user?.userName && 
+           <Link to={`/dashboard/${user.userName}`} className='friends-page-btn' onClick={toggleDropdown}>Dashboard</Link>}
            <Link to="/friends" className='friends-page-btn' onClick={toggleDropdown}>Friends</Link>
            <Link to="/" className='logout-btn' onClick={handleLogout}>Logout</Link>
            </div>

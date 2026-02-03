@@ -8,7 +8,7 @@ import {toast} from 'react-toastify';
 import { Link } from "react-router-dom";
 import axios from "axios";
 function Login({login,setLogin}) {
-  const { url } = useContext(StoreContext);
+  const { url,checkAuth } = useContext(StoreContext);
   const navigate=useNavigate();
   const [showPassword,setShowPassword]=useState(false);
   const [data, setData] = useState({
@@ -26,6 +26,11 @@ function Login({login,setLogin}) {
     }
     navigate("/forgot-password",{state:{email:data.email}});
   }
+  useEffect(() => {
+  if(login){
+    checkAuth();
+  }
+}, [login]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

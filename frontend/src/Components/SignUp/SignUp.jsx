@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext,useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { StoreContext } from "../../context/StoreContext";
 import { GoogleLogin } from "@react-oauth/google";
@@ -9,7 +9,7 @@ import "./SignUp.css";
 import { useNavigate } from "react-router-dom";
 
 function SignUp({login,setLogin}) {
-  const { url } = useContext(StoreContext);
+  const { url,checkAuth } = useContext(StoreContext);
   const navigate=useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -26,7 +26,11 @@ function SignUp({login,setLogin}) {
     codeChef: "",
     codeForces: "",
   });
-
+ useEffect(() => {
+   if(login){
+     checkAuth();
+   }
+ }, [login]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
@@ -38,7 +42,7 @@ function SignUp({login,setLogin}) {
     const response=await axios.post(url+"/api/user/signUp",data,{ withCredentials: true });
     if(response.data.success){
     setLogin(true);
-    navigate('/',{state:{toastMessage:"Login Successful!"}})
+    navigate('/',{state:{toastMessage:"Login Successful!"}});
     }
     else{
       setLogin(false);

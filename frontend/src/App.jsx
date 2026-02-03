@@ -22,7 +22,7 @@ function App() {
       <Route path='/login' element={<LoginPage login={login} setLogin={setLogin}/>}/>
       <Route path='/forgot-password' element={<ForgotPasswordPage/>}/>
       <Route path='/signup' element={<SignUpPage login={login} setLogin={setLogin}/>}/>
-      <Route path='/dashboard' element={<DashboardPage/>}/>
+      <Route path='/dashboard/:userName' element={<DashboardPage/>}/>
       <Route path='/leaderboard' element={<LeaderboardPage/>}/>
       </Routes>
       <Footer/>

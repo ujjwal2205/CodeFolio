@@ -3,8 +3,8 @@ import bcrypt from "bcrypt";
 import validator from "validator";
 import jwt from "jsonwebtoken";
 import verifyGoogleToken from "../Middlewares/googleAuth.js";
-const createToken=(email)=>{
-    return jwt.sign({email:email},process.env.JWT_SECRET,{ expiresIn: "7d" });
+const createToken=(user)=>{
+    return jwt.sign({email:user.email,userName:user.userName},process.env.JWT_SECRET,{ expiresIn: "7d" });
 }
 // Sign Up
 const signUp=async(req,res)=>{
@@ -44,7 +44,7 @@ const signUp=async(req,res)=>{
         codeForces:codeForces
     })
     await newUser.save();
-    const token=createToken(normalizedEmail);
+    const token=createToken(newUser);
     res.cookie("token",token,{
         httpOnly:true,
         secure:false,
@@ -74,7 +74,7 @@ const logIn=async(req,res)=>{
    if(!isMatch){
     return res.json({success:false,message:"Invalid credentials"});
    }
-   const token=createToken(normalizedEmail);
+   const token=createToken(exists);
    res.cookie("token",token,{
         httpOnly:true,
         secure:false,
@@ -129,7 +129,7 @@ const googleLogin=async(req,res)=>{
            });
            await user.save();
         }
-        const token=createToken(normalizedEmail);
+        const token=createToken(user);
         res.cookie("token",token,{
         httpOnly:true,
         secure:false,
@@ -143,4 +143,19 @@ const googleLogin=async(req,res)=>{
         
     }
 }
-export {signUp,logIn,logOut,googleLogin};
+//fetchUserId
+const fetchUserId=async(req,res)=>{
+    const {email,userName}=req.user;
+    try {
+        const normalizedEmail=email.toLowerCase();
+        const user=await userModel.findOne({email:normalizedEmail});
+        if(!user){
+            return res.json({success:false,message:"User doesn't exist."});
+        }
+        return res.json({success:true,userName,email:normalizedEmail});
+    } catch (error) {
+        console.log(error);
+        return res.json({success:false,message:error.message});
+    }
+}
+export {signUp,logIn,logOut,googleLogin,fetchUserId};

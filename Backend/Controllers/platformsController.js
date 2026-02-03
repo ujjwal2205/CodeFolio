@@ -4,13 +4,13 @@ import * as cheerio from "cheerio";
 
 // Codeforces
 const codeForces=async(req,res)=>{
-    const email=req.user.email;
+    const {userName}=req.params;
     try {
-        const normalizedEmail=email.toLowerCase();
-        const user=await userModel.findOne({email:normalizedEmail});
+        const user=await userModel.findOne({userName});
         if(user.codeForces===""){
             return res.json({success:false,message:"CodeForces handle not provided"});
         }
+        const normalizedEmail=user.email;
         const response1=await fetch(`https://codeforces.com/api/user.info?handles=${user.codeForces}`);
         const response2=await fetch(`https://codeforces.com/api/user.status?handle=${user.codeForces}`);
         const response3=await fetch(`https://codeforces.com/api/user.rating?handle=${user.codeForces}`);
@@ -38,13 +38,13 @@ const codeForces=async(req,res)=>{
 }
 //LeetCode
 const LeetCode=async(req,res)=>{
-    const email=req.user.email;
+    const {userName}=req.params;
     try {
-        const normalizedEmail=email.toLowerCase();
-        const user=await userModel.findOne({email:normalizedEmail});
+        const user=await userModel.findOne({userName});
         if(user.leetCode===""){
             return res.json({success:false,message:"LeetCode handle not provided"});
         }
+        const normalizedEmail=user.email;
         const query=`
         query getUser($username:String!){
         matchedUser(username:$username){
@@ -97,13 +97,13 @@ const HEADERS = {
   "Accept-Language": "en-US,en;q=0.9",
 };
 const codeChef=async(req,res)=>{
-    const email=req.user.email;
+    const {userName}=req.params;
  try {
-     const normalizedEmail=email.toLowerCase();
-     const user=await userModel.findOne({email:normalizedEmail});
+    const user=await userModel.findOne({userName});
      if(user.codeChef===""){
         return res.json({success:false,message:"CodeChef handle not provided."});
      }
+     const normalizedEmail=user.email;
     let response=await axios.get(`https://www.codechef.com/users/${user.codeChef}`,
         {headers:HEADERS,timeout:30000}
     );

@@ -3,9 +3,11 @@ import "./Leaderboard.css";
 import axios from "axios";
 import { StoreContext } from "../../context/StoreContext";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 function Leaderboard() {
+  const navigate=useNavigate();
   const [activeTab, setActiveTab] = useState("overall");
-  const {url}=useContext(StoreContext);
+  const {url,user}=useContext(StoreContext);
   const [userName,setUserName]=useState("");
   const [leaderBoardData,setLeaderBoardData]=useState({
     overall:[],
@@ -15,10 +17,11 @@ function Leaderboard() {
   })
  
   useEffect(()=>{
+    if (!user?.userName) return;
     const fetchLeaderBoard=async()=>{
         try {
             const [leaderboard,leetCode,codeChef,codeForces]=await Promise.all([
-                axios.post(url+"/api/Leaderboard/fetchLeaderboard",{},{withCredentials:true}),
+                axios.post(url+`/api/Leaderboard/fetchLeaderboard/${user.userName}`,{},{withCredentials:true}),
                 axios.post(url+"/api/Leaderboard/fetchLeetcodeLeaderBoard",{},{withCredentials:true}),
                 axios.post(url+"/api/Leaderboard/fetchCodeChefLeaderBoard",{},{withCredentials:true}),
                 axios.post(url+"/api/Leaderboard/fetchCodeForcesLeaderBoard",{},{withCredentials:true}),
@@ -93,6 +96,8 @@ function Leaderboard() {
           return (
             <div
               key={index}
+              onClick={()=>navigate(`/dashboard/${user.userName}`)}
+              style={{cursor:"pointer"}}
               className={`table-row ${isMyUserName ? "my-rank" : ""}`}
             >
               <span className="rank">#{user.rank}</span>

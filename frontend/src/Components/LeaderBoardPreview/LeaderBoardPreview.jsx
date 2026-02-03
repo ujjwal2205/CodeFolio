@@ -6,7 +6,7 @@ import "./LeaderBoardPreview.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 function LeaderBoardPreview({login}) {
-  const {url}=useContext(StoreContext);
+  const {url,user}=useContext(StoreContext);
   const leaders = [
     { rank: 1, name: "coder_***", score: "9120 pts" },
     { rank: 2, name: "dev_***", score: "8840 pts" },
@@ -14,10 +14,11 @@ function LeaderBoardPreview({login}) {
   ];
   const[data,setData]=useState([]); 
   useEffect(()=>{
+    
   if(login){
   const fetchLeaderBoard=async()=>{
         try {
-          const response=await axios.post(url+"/api/Leaderboard/fetchLeaderBoard",{},{withCredentials:true});
+          const response=await axios.post(url+`/api/Leaderboard/fetchLeaderBoard/${user.userName}`,{},{withCredentials:true});
           if(response.data.success){
             setData(response.data.data);
           }

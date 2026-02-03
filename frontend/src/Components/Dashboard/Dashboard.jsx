@@ -2,13 +2,16 @@
   import LeftSidebar from "../LeftSidebar/LeftSidebar.jsx";
   import RightSidebar from "../RightSidebar/RightSidebar.jsx";
   import { StoreContext } from "../../context/StoreContext.jsx";
+  import { useParams } from "react-router-dom";
   import { toast } from "react-toastify";
   import "./Dashboard.css";
   import axios from "axios";
   export default function Dashboard() {
+    const {userName}=useParams();
     const [active, setActive] = useState("overview");
-    const {url}=useContext(StoreContext);
+    const {url,user}=useContext(StoreContext);
     const [data,setData]=useState({
+      "id":"",
       "userName":"",
       "email":"",
       "linkedIn":"",
@@ -21,10 +24,10 @@
     useEffect(()=>{
       const fetchData=async()=>{
         try {
-          const lcRes=await axios.post(url+"/api/site/leetcode",{},{withCredentials:true});
-          const ccRes=await axios.post(url+"/api/site/codeChef",{},{withCredentials:true});
-          const cfRes=await axios.post(url+"/api/site/codeForces",{},{withCredentials:true});
-          const leaderBoard=await axios.post(url+"/api/Leaderboard/fetchLeaderBoard",{},{withCredentials:true});
+          const lcRes=await axios.post(url+`/api/site/leetcode/${userName}`,{},{withCredentials:true});
+          const ccRes=await axios.post(url+`/api/site/codeChef/${userName}`,{},{withCredentials:true});
+          const cfRes=await axios.post(url+`/api/site/codeForces/${userName}`,{},{withCredentials:true});
+          const leaderBoard=await axios.post(url+`/api/Leaderboard/fetchLeaderBoard/${userName}`,{},{withCredentials:true});
           if(lcRes.data.success){
             const user=lcRes.data.data.data.matchedUser;
             setData(prev=>({...prev,leetCode:{
@@ -41,9 +44,17 @@
             if(lcRes.data.message==="LeetCode handle not provided"){
               console.log(lcRes.data.message);
             }
+            else if(lcRes.data.message==="Invalid LeetCode Username"){
+              console.log(lcRes.data.message);
+              if(user.userName==userName){
+              toast.error(lcRes.data.message);
+              }
+            }
             else{
             console.log(lcRes.data.message);
+            if(user.userName==userName){
             toast.error("We couldn’t fetch your LeetCode data right now. Please try again shortly.");
+            }
           }}
           if(ccRes.data.success){
             const user=ccRes.data;
@@ -67,7 +78,9 @@
             }
             else{
             console.log(ccRes.data.message);
+            if(user.userName==userName){
             toast.error(ccRes.data.message);
+            }
             }
           }
           if(cfRes.data.success){
@@ -93,7 +106,9 @@
             }
             else{
             console.log(cfRes.data.message);
+            if(user.userName==userName){
             toast.error(cfRes.data.message);
+            }
             }
           }
           if(leaderBoard.data.success){
