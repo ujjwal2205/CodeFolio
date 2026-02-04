@@ -15,7 +15,7 @@ function LeaderBoardPreview({login}) {
   const[data,setData]=useState([]); 
   useEffect(()=>{
     
-  if(login){
+  if(login && user?.userName){
   const fetchLeaderBoard=async()=>{
         try {
           const response=await axios.post(url+`/api/Leaderboard/fetchLeaderBoard/${user.userName}`,{},{withCredentials:true});
@@ -32,7 +32,7 @@ function LeaderBoardPreview({login}) {
       }
       fetchLeaderBoard();
     }
-  },[login]);
+  },[user,login]);
   const loggedIn = login;
 
   return (

@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { StoreContext } from "../../context/StoreContext.jsx";
 export default function LeftSidebar({ active, setActive,data }) {
   const [psDropdown, setPsDropdown] = useState(true);
-  const {user}=useContext(StoreContext);
+  const {user,friends}=useContext(StoreContext);
   return (
     <aside className="sidebar">
       <div className="profile-box">
@@ -21,7 +21,6 @@ export default function LeftSidebar({ active, setActive,data }) {
         <div className="avatar">{data.userName[0]?.toUpperCase()}</div>
         <h3>@{data.userName}</h3>
       </div>
-
       <div className="social-row">
         <FaEnvelope
           className={data.email!=="" ? "icon active" : "icon disabled"}
@@ -52,6 +51,14 @@ export default function LeftSidebar({ active, setActive,data }) {
           title={data.twitter!=="" && `https://x.com/${data.twitter}`}
         />
       </div>
+       {( !data.friendRequests.include(user.userName) && !friends.include(data.userName)&& user.userName !== data.userName) && (
+       <button
+       className="friend-btn"
+       onClick={() => toast.success("Friend request sent 🚀")}
+       >
+       Add Friend
+      </button>
+      )}
       {user.userName==data.userName && 
       <button className="codefolio-btn">Get your Codefolio Card</button>
       }

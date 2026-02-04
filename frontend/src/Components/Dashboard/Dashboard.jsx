@@ -20,6 +20,7 @@
       "codeChef":null,
       "codeForces":null,
       "leaderboardRank":null,
+      "friendRequests":null
     });
     useEffect(()=>{
       const fetchData=async()=>{
@@ -28,6 +29,7 @@
           const ccRes=await axios.post(url+`/api/site/codeChef/${userName}`,{},{withCredentials:true});
           const cfRes=await axios.post(url+`/api/site/codeForces/${userName}`,{},{withCredentials:true});
           const leaderBoard=await axios.post(url+`/api/Leaderboard/fetchLeaderBoard/${userName}`,{},{withCredentials:true});
+          const friendRequests=await axios.post(url+`/api/friends/getFriendRequests/${userName}`,{},{withCredentials:true});
           if(lcRes.data.success){
             const user=lcRes.data.data.data.matchedUser;
             setData(prev=>({...prev,leetCode:{
@@ -55,7 +57,14 @@
             if(user.userName==userName){
             toast.error("We couldn’t fetch your LeetCode data right now. Please try again shortly.");
             }
-          }}
+          }
+          setData(prev=>({...prev,
+                email:lcRes.data.email,
+          linkedIn:lcRes.data.linkedIn,
+          twitter:lcRes.data.twitter,
+          userName:lcRes.data.userName
+              }));
+        }
           if(ccRes.data.success){
             const user=ccRes.data;
             setData(prev=>({...prev,codeChef:{
@@ -82,6 +91,12 @@
             toast.error(ccRes.data.message);
             }
             }
+            setData(prev=>({...prev,
+                email:lcRes.data.email,
+          linkedIn:lcRes.data.linkedIn,
+          twitter:lcRes.data.twitter,
+          userName:lcRes.data.userName
+              }));
           }
           if(cfRes.data.success){
             const user=cfRes.data;
@@ -110,6 +125,12 @@
             toast.error(cfRes.data.message);
             }
             }
+            setData(prev=>({...prev,
+                email:lcRes.data.email,
+          linkedIn:lcRes.data.linkedIn,
+          twitter:lcRes.data.twitter,
+          userName:lcRes.data.userName
+              }));
           }
           if(leaderBoard.data.success){
             setData(prev=>({...prev,leaderboardRank:leaderBoard.data.myRank}));
@@ -117,6 +138,13 @@
           else{
             toast.error(leaderBoard.data.message);
             console.log(leaderBoard.data.message);
+          }
+          if(friendRequests.data.success){
+            setData(prev=>({...prev,friendRequests:friendRequests.data.requests}));
+          }
+          else{
+            toast.error(friendRequests.data.message);
+            console.log(friendRequests.data.message);
           }
         } catch (error) {
           toast.error(error.message);

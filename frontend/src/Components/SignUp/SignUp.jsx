@@ -9,7 +9,7 @@ import "./SignUp.css";
 import { useNavigate } from "react-router-dom";
 
 function SignUp({login,setLogin}) {
-  const { url,checkAuth } = useContext(StoreContext);
+  const { url,checkAuth,fetchFriendsAndRequests } = useContext(StoreContext);
   const navigate=useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

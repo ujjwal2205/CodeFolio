@@ -8,6 +8,7 @@ import ForgotPasswordPage from './Pages/ForgotPasswordPage/ForgotPasswordPage.js
 import SignUpPage from './Pages/SignUpPage/SignUpPage.jsx';
 import DashboardPage from './Pages/DashboardPage/DashboardPage.jsx';
 import LeaderboardPage from './Pages/LeaderboardPage/LeaderboardPage.jsx';
+import FriendsPage from './Pages/FriendsPage/FriendsPage.jsx';
 import {Route,Routes} from 'react-router-dom';
 import Footer from './Components/Footer/Footer.jsx';
 function App() {
@@ -24,6 +25,7 @@ function App() {
       <Route path='/signup' element={<SignUpPage login={login} setLogin={setLogin}/>}/>
       <Route path='/dashboard/:userName' element={<DashboardPage/>}/>
       <Route path='/leaderboard' element={<LeaderboardPage/>}/>
+      <Route path="/friends" element={<FriendsPage/>}/>
       </Routes>
       <Footer/>
     </div>

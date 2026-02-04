@@ -1,10 +1,10 @@
 import userModel from "../models/userModel.js";
 const sendFriendRequest=async(req,res)=>{
-    const {receiverUserName,email}=req.body;
+    const {receiverUserName}=req.body;
+    const userName=req.user.userName;
     try {
-        const normalizedEmail=email.toLowerCase();
         const normalizedUserName=receiverUserName.toLowerCase().trim();
-        let sender=await userModel.findOne({email:normalizedEmail});
+        let sender=await userModel.findOne({userName});
         if(!sender){
             return res.json({success:false,message:"Sender doesn't exist."});
         }
@@ -30,10 +30,10 @@ const sendFriendRequest=async(req,res)=>{
     }
 }
 const acceptFriendRequest=async(req,res)=>{
-    const {senderUserName,email}=req.body;
+    const {senderUserName}=req.body;
+    const userName=req.user.userName;
     try {
         const normalizedSenderUserName=senderUserName.toLowerCase().trim();
-        const normalizedEmail=email.toLowerCase();
         if(!normalizedSenderUserName){
             return res.json({success:false,message:"User not found"});
         }
@@ -41,7 +41,7 @@ const acceptFriendRequest=async(req,res)=>{
         if(!sender){
             return res.json({success:false,message:"Sender not found."});
         }
-        const receiver=await userModel.findOne({email:normalizedEmail});
+        const receiver=await userModel.findOne({userName});
         if(!receiver){
             return res.json({success:false,message:"Receiver not found."});
         }
@@ -59,10 +59,10 @@ const acceptFriendRequest=async(req,res)=>{
     }
 }
 const rejectFriendRequest=async(req,res)=>{
-    const {senderUserName,email}=req.body;
+    const {senderUserName}=req.body;
+    const userName=req.user.userName;
     try {
         const normalizedSenderUserName=senderUserName.toLowerCase().trim();
-        const normalizedEmail=email.toLowerCase();
         if(!normalizedSenderUserName){
             return res.json({success:false,message:"User not found"});
         }
@@ -70,7 +70,7 @@ const rejectFriendRequest=async(req,res)=>{
         if(!sender){
             return res.json({success:false,message:"Sender not found."});
         }
-        const receiver=await userModel.findOne({email:normalizedEmail});
+        const receiver=await userModel.findOne({userName});
         if(!receiver){
             return res.json({success:false,message:"Receiver not found."});
         }
@@ -85,14 +85,14 @@ const rejectFriendRequest=async(req,res)=>{
     }
 }
 const removeFriend=async(req,res)=>{
-    const {email,friendUserName}=req.body;
+    const {friendUserName}=req.body;
+    const userName=req.user.userName;
     try {
-        const normalizedEmail=email.toLowerCase();
         const normalizedFriendUserName=friendUserName.toLowerCase().trim();
         if(!normalizedFriendUserName){
             return res.json({success:false,message:"Invalid UserName"});
         }
-        const user=await userModel.findOne({email:normalizedEmail});
+        const user=await userModel.findOne({userName});
         if(!user){
             return res.json({success:false,message:"Your db entry not found!"});
         }
@@ -115,18 +115,31 @@ const removeFriend=async(req,res)=>{
     }
 }
 const getFriends=async(req,res)=>{
-    const {email}=req.body;
+    const userName=req.user.userName;
     try {
-        const normalizedEmail=email.toLowerCase();
-        let user=await userModel.findOne({email:normalizedEmail});
+        let user=await userModel.findOne({userName});
         if(!user){
             return res.json({success:false,message:"User not found."});
         }
-        user=await user.populate("friends","userName leetCode codeChef codeForces");
+        user=await user.populate("friends","userName leetCode codeChef codeForces score");
         return res.json({success:true,friends:user.friends});
     } catch (error) {
         console.log(error);
         return res.json({success:false,message:error.message});
     }
 }
-export {sendFriendRequest,acceptFriendRequest,rejectFriendRequest,getFriends,removeFriend};
+const getFriendRequests=async(req,res)=>{
+    const {userName}=req.params;
+    try {
+        let user=await userModel.findOne({userName});
+        if(!user){
+            return res.json({success:false,message:"User not found"});
+        }
+        user=await user.populate("friendRequests","userName leetCode codeChef codeForces score");
+        return res.json({success:true,requests:user.friendRequests});
+    } catch (error) {
+        console.log(error);
+        return res.json({success:false,message:error.message});
+    }
+}
+export {sendFriendRequest,acceptFriendRequest,rejectFriendRequest,getFriends,removeFriend,getFriendRequests};

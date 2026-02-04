@@ -8,7 +8,7 @@ import {toast} from 'react-toastify';
 import { Link } from "react-router-dom";
 import axios from "axios";
 function Login({login,setLogin}) {
-  const { url,checkAuth } = useContext(StoreContext);
+  const { url,checkAuth,fetchFriendsAndRequests } = useContext(StoreContext);
   const navigate=useNavigate();
   const [showPassword,setShowPassword]=useState(false);
   const [data, setData] = useState({
@@ -29,6 +29,7 @@ function Login({login,setLogin}) {
   useEffect(() => {
   if(login){
     checkAuth();
+   
   }
 }, [login]);
   const handleSubmit = async (e) => {

@@ -68,9 +68,10 @@ function Navbar({login,setLogin}) {
            <FaUserCircle/>
            </div>
            <div className={`user-dropdown ${dropdown?"show":""}`}>
-           {user?.userName && 
-           <Link to={`/dashboard/${user.userName}`} className='friends-page-btn' onClick={toggleDropdown}>Dashboard</Link>}
-           <Link to="/friends" className='friends-page-btn' onClick={toggleDropdown}>Friends</Link>
+           <Link to={`/dashboard/${user.userName}`} className='friends-page-btn' onClick={toggleDropdown}>Dashboard</Link>
+           <Link to="/friends" className='friends-page-btn' onClick={toggleDropdown}>Friends
+           <span className='red-dot'></span>
+           </Link>
            <Link to="/" className='logout-btn' onClick={handleLogout}>Logout</Link>
            </div>
           </div>
