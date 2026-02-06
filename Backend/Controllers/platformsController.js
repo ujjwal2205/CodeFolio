@@ -5,9 +5,14 @@ import * as cheerio from "cheerio";
 // Codeforces
 const codeForces=async(req,res)=>{
     const {userName}=req.params;
+    let user=null;
+    let normalizedEmail=null;
     try {
-        const user=await userModel.findOne({userName});
-        const normalizedEmail=user.email;
+        user=await userModel.findOne({userName});
+        if(!user){
+            return res.json({success:false,message:"User not found."});
+        }
+        normalizedEmail=user.email;
         if(user.codeForces===""){
             return res.json({success:false,message:"CodeForces handle not provided",email:normalizedEmail,linkedIn:user.linkedIn,twitter:user.twitter,userName:user.userName});
         }
@@ -33,15 +38,20 @@ const codeForces=async(req,res)=>{
         return res.json({success:true,data:data1.result[0],totalSolved:solved.size,contest:data3.result,email:normalizedEmail,linkedIn:user.linkedIn,twitter:user.twitter,userName:user.userName});
     } catch (error) {
         console.log(error);
-        return res.json({success:false,message:error.message,email:normalizedEmail,linkedIn:user.linkedIn,twitter:user.twitter,userName:user.userName});
+        return res.json({success:false,message:error.message,email:normalizedEmail||"",linkedIn:user?.linkedIn??"",twitter:user?.twitter??"",userName:user?.userName??""});
     }
 }
 //LeetCode
 const LeetCode=async(req,res)=>{
     const {userName}=req.params;
+    let normalizedEmail=null;
+    let user=null;
     try {
-        const user=await userModel.findOne({userName});
-        const normalizedEmail=user.email;
+        user=await userModel.findOne({userName});
+        if(!user){
+            return res.json({success:false,message:"User not found."});
+        }
+        normalizedEmail=user.email;
         if(user.leetCode===""){
             return res.json({success:false,message:"LeetCode handle not provided",email:normalizedEmail,linkedIn:user.linkedIn,twitter:user.twitter,userName:user.userName});
         }
@@ -87,7 +97,7 @@ const LeetCode=async(req,res)=>{
         return res.json({success:true,data:result1,contest:result2,email:normalizedEmail,linkedIn:user.linkedIn,twitter:user.twitter,userName:user.userName});
     } catch (error) {
         console.log(error);
-        return res.json({success:false,message:error.message,email:normalizedEmail,linkedIn:user.linkedIn,twitter:user.twitter,userName:user.userName});
+        return res.json({success:false,message:error.message,email:normalizedEmail||"",linkedIn:user?.linkedIn??"",twitter:user?.twitter??"",userName:user?.userName??""});
     }
 }
 // codeChef
@@ -98,9 +108,14 @@ const HEADERS = {
 };
 const codeChef=async(req,res)=>{
     const {userName}=req.params;
+    let user=null;
+    let normalizedEmail=null;
  try {
-    const user=await userModel.findOne({userName});
-    const normalizedEmail=user.email;
+    user=await userModel.findOne({userName});
+    if(!user){
+            return res.json({success:false,message:"User not found."});
+        }
+    normalizedEmail=user.email;
      if(user.codeChef===""){
         return res.json({success:false,message:"CodeChef handle not provided.",email:normalizedEmail,linkedIn:user.linkedIn,twitter:user.twitter,userName:user.userName});
      }
@@ -139,8 +154,8 @@ const codeChef=async(req,res)=>{
     return res.json({success:true,rating,highestRating,stars,contestParticipated:Number(contestsParticipated),problemsSolved,email:normalizedEmail,linkedIn:user.linkedIn,twitter:user.twitter,userName:user.codeChef});
     } catch (error) {
     console.log(error);
-    return res.json({success:false,message:error.message,email:normalizedEmail,linkedIn:user.linkedIn,twitter:user.twitter,userName:user.userName});
- }
+    return res.json({success:false,message:error.message,email:normalizedEmail||"",linkedIn:user?.linkedIn??"",twitter:user?.twitter??"",userName:user?.userName??""});
+}
 }
 
 export {codeForces,LeetCode,codeChef};

@@ -158,4 +158,17 @@ const fetchUserId=async(req,res)=>{
         return res.json({success:false,message:error.message});
     }
 }
-export {signUp,logIn,logOut,googleLogin,fetchUserId};
+//user exists or not
+const userExists=async(req,res)=>{
+    try {
+        const {userName}=req.params;
+        const user=await userModel.findOne({userName});
+        if(user){
+            return res.json({success:true,exists:true});
+        }
+        return res.json({success:true,exists:false});
+    } catch (error) {
+        return res.json({success:false,message:error.message});
+    }
+}
+export {signUp,logIn,logOut,googleLogin,fetchUserId,userExists};

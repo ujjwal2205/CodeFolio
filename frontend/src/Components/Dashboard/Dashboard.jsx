@@ -6,10 +6,10 @@
   import { toast } from "react-toastify";
   import "./Dashboard.css";
   import axios from "axios";
-  export default function Dashboard() {
+ function Dashboard() {
     const {userName}=useParams();
     const [active, setActive] = useState("overview");
-    const {url,user}=useContext(StoreContext);
+    const {url,user,friendRequestSent,setFriendRequestSent}=useContext(StoreContext);
     const [data,setData]=useState({
       "id":"",
       "userName":"",
@@ -22,6 +22,24 @@
       "leaderboardRank":null,
       "friendRequests":null
     });
+    useEffect(()=>{
+      const fetchData=async()=>{
+        try {
+          const friendRequests=await axios.post(url+`/api/friends/getFriendRequests/${userName}`,{},{withCredentials:true});
+          if(friendRequests.data.success){
+            setData(prev=>({...prev,friendRequests:friendRequests.data.requests}));
+          }
+          else{
+            toast.error(friendRequests.data.message);
+            console.log(friendRequests.data.message);
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error(error.message);
+        }
+      }
+      fetchData();
+    },[friendRequestSent]);
     useEffect(()=>{
       const fetchData=async()=>{
         try {
@@ -58,12 +76,16 @@
             toast.error("We couldn’t fetch your LeetCode data right now. Please try again shortly.");
             }
           }
-          setData(prev=>({...prev,
-                email:lcRes.data.email,
-          linkedIn:lcRes.data.linkedIn,
-          twitter:lcRes.data.twitter,
-          userName:lcRes.data.userName
-              }));
+          setData(prev => {
+          if (prev.email !== "") return prev;
+          return {
+          ...prev,
+          email: lcRes.data.email,
+          linkedIn: lcRes.data.linkedIn,
+          twitter: lcRes.data.twitter,
+          userName: lcRes.data.userName
+          };
+         });
         }
           if(ccRes.data.success){
             const user=ccRes.data;
@@ -91,12 +113,16 @@
             toast.error(ccRes.data.message);
             }
             }
-            setData(prev=>({...prev,
-                email:lcRes.data.email,
-          linkedIn:lcRes.data.linkedIn,
-          twitter:lcRes.data.twitter,
-          userName:lcRes.data.userName
-              }));
+            setData(prev => {
+          if (prev.email !== "") return prev;
+          return {
+          ...prev,
+          email: lcRes.data.email,
+          linkedIn: lcRes.data.linkedIn,
+          twitter: lcRes.data.twitter,
+          userName: lcRes.data.userName
+          };
+         });
           }
           if(cfRes.data.success){
             const user=cfRes.data;
@@ -125,12 +151,16 @@
             toast.error(cfRes.data.message);
             }
             }
-            setData(prev=>({...prev,
-                email:lcRes.data.email,
-          linkedIn:lcRes.data.linkedIn,
-          twitter:lcRes.data.twitter,
-          userName:lcRes.data.userName
-              }));
+            setData(prev => {
+          if (prev.email !== "") return prev;
+          return {
+          ...prev,
+          email: lcRes.data.email,
+          linkedIn: lcRes.data.linkedIn,
+          twitter: lcRes.data.twitter,
+          userName: lcRes.data.userName
+          };
+         });
           }
           if(leaderBoard.data.success){
             setData(prev=>({...prev,leaderboardRank:leaderBoard.data.myRank}));
@@ -152,7 +182,7 @@
         }
       }
       fetchData();
-    },[]);
+    },[userName]);
     return (
       <div className="dashboard-root">
         <LeftSidebar active={active} setActive={setActive} data={data}/>
@@ -160,3 +190,4 @@
       </div>
     );
   }
+export default Dashboard;

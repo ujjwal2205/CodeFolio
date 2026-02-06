@@ -9,6 +9,7 @@ import SignUpPage from './Pages/SignUpPage/SignUpPage.jsx';
 import DashboardPage from './Pages/DashboardPage/DashboardPage.jsx';
 import LeaderboardPage from './Pages/LeaderboardPage/LeaderboardPage.jsx';
 import FriendsPage from './Pages/FriendsPage/FriendsPage.jsx';
+import EditPage from './Pages/EditPage/EditPage.jsx';
 import {Route,Routes} from 'react-router-dom';
 import Footer from './Components/Footer/Footer.jsx';
 function App() {
@@ -26,6 +27,7 @@ function App() {
       <Route path='/dashboard/:userName' element={<DashboardPage/>}/>
       <Route path='/leaderboard' element={<LeaderboardPage/>}/>
       <Route path="/friends" element={<FriendsPage/>}/>
+      <Route path="/edit" element={<EditPage/>}/>
       </Routes>
       <Footer/>
     </div>

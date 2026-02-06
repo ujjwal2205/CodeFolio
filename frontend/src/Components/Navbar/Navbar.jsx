@@ -3,14 +3,16 @@ import { StoreContext } from '../../context/StoreContext.jsx';
 import { Link } from 'react-router-dom';
 import {FaUserCircle} from "react-icons/fa"
 import './Navbar.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { toast } from 'react-toastify';
 function Navbar({login,setLogin}) {
-    const {url,user}=useContext(StoreContext);
+    const {url,user,requests}=useContext(StoreContext);
     const location=useLocation();
+    const navigate=useNavigate();
     const [dropdown,setDropdown]=useState(false);
     const dropdownRef=useRef(null);
+    const [value,setValue]=useState("");
     useEffect(()=>{
         const handleClickOutside=(event)=>{
             if(!dropdownRef.current?.contains(event.target)){
@@ -34,6 +36,33 @@ function Navbar({login,setLogin}) {
         } catch (error) {
             console.log(error);
             toast.error(error.message);
+        }
+    }
+    const handleChange=(e)=>{
+    setValue(e.target.value);
+    }
+    const handleSubmit=async(e)=>{
+        if(e.key=="Enter"){
+            console.log(value);
+            if(value.trim()===""){
+                toast.error("Please enter a username");
+                return;
+            }
+            try {
+                const response=await axios.get(url+`/api/user/userExists/${value}`,{withCredentials:true});
+                if(response.data.success){
+                    if(response.data.exists){
+                        navigate(`/dashboard/${value}`);
+                    }
+                    else{
+                        toast.error("User does not exist.");
+                    }
+                }
+            } catch (error) {
+                toast.error(error.message);
+                console.log(error);
+            }
+            setValue("");
         }
     }
   return (
@@ -62,6 +91,9 @@ function Navbar({login,setLogin}) {
           className="user-Search"
           type="text"
           placeholder="Search users"
+          value={value}
+          onChange={handleChange}
+          onKeyDown={handleSubmit}
           />
           <div className='user-menu' ref={dropdownRef}>
            <div className='user-icon' onClick={toggleDropdown}>
@@ -70,8 +102,9 @@ function Navbar({login,setLogin}) {
            <div className={`user-dropdown ${dropdown?"show":""}`}>
            <Link to={`/dashboard/${user.userName}`} className='friends-page-btn' onClick={toggleDropdown}>Dashboard</Link>
            <Link to="/friends" className='friends-page-btn' onClick={toggleDropdown}>Friends
-           <span className='red-dot'></span>
+           {requests?.length>0 && <span className='red-dot'></span>}
            </Link>
+           <Link to="/edit" className='edit-btn' onClick={()=>toggleDropdown()}>Edit Profile</Link>
            <Link to="/" className='logout-btn' onClick={handleLogout}>Logout</Link>
            </div>
           </div>

@@ -1,9 +1,12 @@
 import userModel from "../models/userModel.js";
 const linkedInChange=async(req,res)=>{
- const {email,handle}=req.body;
+ const {handle}=req.body;
+ const userName=req.user.userName;
  try {
-    const normalizedEmail=email.toLowerCase();
-    const user=await userModel.findOne({email:normalizedEmail});
+    if(handle==""){
+        return res.json({success:false,message:"Handle is empty."});
+    }
+    const user=await userModel.findOne({userName});
     if(!user){
         return res.json({success:false,message:"user doesn't exist"});
     }
@@ -16,10 +19,13 @@ const linkedInChange=async(req,res)=>{
  }
 }
 const twitterChange=async(req,res)=>{
-    const{email,handle}=req.body;
+    const{handle}=req.body;
+    const userName=req.user.userName;
     try {
-    const normalizedEmail=email.toLowerCase();
-    const user=await userModel.findOne({email:normalizedEmail});
+    if(handle==""){
+        return res.json({success:false,message:"Handle is empty."})
+    }
+    const user=await userModel.findOne({userName});
     if(!user){
         return res.json({success:false,message:"user doesn't exist"});
     }
@@ -32,10 +38,13 @@ catch(error){
     return res.json({success:false,message:error.message});
 }}
 const leetcodeHandleChange=async(req,res)=>{
-    const {email,handle}=req.body;
+    const {handle}=req.body;
+    const userName=req.user.userName;
     try {
-        const normalizedEmail=email.toLowerCase();
-        let user=await userModel.findOne({email:normalizedEmail});
+        if(handle==""){
+            return res.json({success:false,message:"Handle is Empty."});
+        }
+        let user=await userModel.findOne({userName});
         if(!user){
             return res.json({success:false,message:"User doesn't exist"});
         }
@@ -48,10 +57,13 @@ const leetcodeHandleChange=async(req,res)=>{
     }
 }
 const codeForcesHandleChange=async(req,res)=>{
-    const {email,handle}=req.body;
+    const {handle}=req.body;
+    const userName=req.user.userName;
     try {
-        const normalizedEmail=email.toLowerCase();
-        let user=await userModel.findOne({email:normalizedEmail});
+        if(handle==""){
+            return res.json({success:false,message:"Handle is Empty."});
+        }
+        let user=await userModel.findOne({userName});
         if(!user){
             return res.json({success:false,message:"User doesn't exist"});
         }
@@ -64,10 +76,13 @@ const codeForcesHandleChange=async(req,res)=>{
     }
 }
 const codeChefHandleChange=async(req,res)=>{
-    const {email,handle}=req.body;
+    const {handle}=req.body;
+    const userName=req.user.userName;
     try {
-        const normalizedEmail=email.toLowerCase();
-        let user=await userModel.findOne({email:normalizedEmail});
+        if(handle==""){
+            return res.json({success:false,message:"Handle is Empty."});
+        }
+        let user=await userModel.findOne({userName});
         if(!user){
             return res.json({success:false,message:"User doesn't exist"});
         }
@@ -80,14 +95,14 @@ const codeChefHandleChange=async(req,res)=>{
     }
 }
 const userNameChange=async(req,res)=>{
-    const{email,newUserName}=req.body;
+    const{newUserName}=req.body;
+    const userName=req.user.userName;
     try {
-        const normalizedEmail=email.toLowerCase();
         const normalizedUserName=newUserName.toLowerCase().trim();
         if(!normalizedUserName){
             return res.json({success:false,message:"Enter Valid Username."});
         }
-        let user=await userModel.findOne({email:normalizedEmail});
+        let user=await userModel.findOne({userName});
         let alreadyExists=await userModel.findOne({userName:normalizedUserName});
         if(!user){
             return res.json({success:false,message:"User doesn't exist"});

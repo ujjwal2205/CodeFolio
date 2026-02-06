@@ -1,24 +1,24 @@
 /* ---------- PAGE ---------- */
-.friends-page {
+.fr-page {
   padding: 1.8rem;
   background: #0b0f19;
   min-height: 100vh;
   color: #e5e7eb;
 }
 
-.friends-page h2 {
+.fr-page h2 {
   font-size: 1.6rem;
   margin-bottom: 1.2rem;
 }
 
 /* ---------- TABS ---------- */
-.friends-tabs {
+.fr-tabs {
   display: flex;
   gap: 14px;
   margin-bottom: 1.5rem;
 }
 
-.friends-tabs button {
+.fr-tabs button {
   background: #111827;
   border: none;
   padding: 10px 20px;
@@ -31,27 +31,27 @@
   transition: all 0.25s ease;
 }
 
-.friends-tabs button span {
+.fr-tabs button span {
   background: #1f2937;
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 0.8rem;
 }
 
-.friends-tabs button.active {
+.fr-tabs button.active {
   background: linear-gradient(135deg, #6366f1, #4f46e5);
   color: #fff;
 }
 
 /* ---------- LIST ---------- */
-.friends-list {
+.fr-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
 /* ---------- ROW ---------- */
-.friend-row {
+.fr-row {
   background: linear-gradient(180deg, #111827, #0f172a);
   padding: 14px 18px;
   border-radius: 16px;
@@ -60,22 +60,23 @@
   justify-content: space-between;
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.25s ease;
+  cursor: pointer;
 }
 
-.friend-row:hover {
+.fr-row:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
 }
 
 /* ---------- LEFT ---------- */
-.friend-left {
+.fr-left {
   display: flex;
   align-items: center;
   gap: 14px;
 }
 
 /* ---------- AVATAR ---------- */
-.avatar {
+.fr-avatar {
   width: 46px;
   height: 46px;
   border-radius: 14px;
@@ -88,29 +89,29 @@
   color: #020617;
 }
 
-.avatar.alt {
+.fr-avatar.fr-alt {
   background: linear-gradient(135deg, #34d399, #22c55e);
 }
 
 /* ---------- TEXT ---------- */
-.friend-left h4 {
+.fr-left h4 {
   font-size: 1rem;
   margin-bottom: 4px;
 }
 
-.subtext {
+.fr-subtext {
   font-size: 0.85rem;
   color: #9ca3af;
 }
 
 /* ---------- META ---------- */
-.meta {
+.fr-meta {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.score {
+.fr-score {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -118,10 +119,8 @@
   color: #d1d5db;
 }
 
-
-
 /* ---------- REMOVE ---------- */
-.remove-btn {
+.fr-remove {
   background: rgba(239, 68, 68, 0.15);
   border: none;
   color: #ef4444;
@@ -131,19 +130,19 @@
   transition: all 0.2s ease;
 }
 
-.remove-btn:hover {
+.fr-remove:hover {
   background: rgba(239, 68, 68, 0.25);
   transform: scale(1.1);
 }
 
 /* ---------- REQUEST ACTIONS ---------- */
-.request-actions {
+.fr-actions {
   display: flex;
   gap: 8px;
 }
 
-.accept,
-.reject {
+.fr-accept,
+.fr-reject {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -153,19 +152,18 @@
   transition: all 0.2s ease;
 }
 
-.accept {
+.fr-accept {
   background: rgba(34, 197, 94, 0.2);
   color: #22c55e;
 }
 
-.reject {
+.fr-reject {
   background: rgba(239, 68, 68, 0.2);
   color: #ef4444;
 }
 
 /* ---------- STATES ---------- */
-.loading,
-.empty {
+.fr-empty {
   text-align: center;
   color: #9ca3af;
   margin-top: 2rem;

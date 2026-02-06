@@ -1,41 +1,92 @@
-import React, { useEffect, useState,useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { toast } from "react-toastify";
-import {Trophy,Hash,UserMinus,Check,X,Users,UserPlus} from "lucide-react";
+import {Trophy,UserMinus,Check,X,Users,UserPlus} from "lucide-react";
 import "./Friends.css";
-import {StoreContext} from '../../context/StoreContext.jsx'
-import {useNavigate} from "react-router-dom";
-
+import { StoreContext } from "../../context/StoreContext.jsx";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
 function Friends() {
   const [activeTab, setActiveTab] = useState("friends");
-  const [loading, setLoading] = useState(true);
-  const {friends,requests}=useContext(StoreContext);
-  const navigate=useNavigate();
-  useEffect(()=>{
+  const { friends, requests,setFriends,setRequests,url,fetchFriendsAndRequests2 } = useContext(StoreContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
     console.log(friends);
-  },[]);
-  const acceptRequest = (id) => {
-    const user = requests.find((r) => r._id === id);
-    setRequests((prev) => prev.filter((r) => r._id !== id));
-    setFriends((prev) => [...prev, { ...user, score: 0, rank: "—" }]);
-    toast.success("Friend added 🎉");
+  }, [friends,requests]);
+  
+  const acceptRequest = async(userName) => {
+    try {
+      const response=await axios.post(url+"/api/friends/acceptFriendRequest",{
+        senderUserName:userName
+      },{withCredentials:true})
+      if(response.data.success){
+        fetchFriendsAndRequests2();
+        toast.success("Friend added 🎉");
+      }
+      else{
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
   };
 
-  const rejectRequest = (id) => {
-    setRequests((prev) => prev.filter((r) => r._id !== id));
-    toast.info("Request rejected");
+  const rejectRequest = async(userName) => {
+    try {
+      const response=await axios.post(url+"/api/friends/rejectFriendRequest",{
+      senderUserName:userName
+      },{withCredentials:true});
+      if(response.data.success){
+        fetchFriendsAndRequests2();
+        toast.info("Request rejected");
+      }
+      else{
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
   };
+  
+  const removeFriend = async(userName) => {
+    const result=await Swal.fire({
+      title:"Remove friend?",
+      text:"This action cannot be undone",
+      icon:"warning",
+      showCancelButton:true,
+      confirmButtonText:"Yes, remove",
+      cancelButtonText:"Cancel"
+    })
+    if (!result.isConfirmed){
+       return;
+    }
+    else{
+      try {
+        const response=await axios.post(url+"/api/friends/removeFriend",{
+          friendUserName:userName
+        },{withCredentials:true});
+        if(response.data.success){
+          fetchFriendsAndRequests2();
+          toast.error("Friend removed");
+        }
+        else{
+          toast.error(response.data.messsage);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
-  const removeFriend = (id) => {
-    if (!window.confirm("Remove this friend?")) return;
-    setFriends((prev) => prev.filter((f) => f._id !== id));
-    toast.error("Friend removed");
   };
 
   return (
-    <div className="friends-page">
+    <div className="fr-page">
       <h2>Friends</h2>
 
-      <div className="friends-tabs">
+      <div className="fr-tabs">
         <button
           className={activeTab === "friends" ? "active" : ""}
           onClick={() => setActiveTab("friends")}
@@ -43,6 +94,7 @@ function Friends() {
           <Users size={16} />
           Friends <span>{friends.length}</span>
         </button>
+
         <button
           className={activeTab === "requests" ? "active" : ""}
           onClick={() => setActiveTab("requests")}
@@ -52,25 +104,26 @@ function Friends() {
         </button>
       </div>
 
-      {friends!=null && activeTab === "friends" && (
-        <div className="friends-list">
+      {friends != null && activeTab === "friends" && (
+        <div className="fr-list">
           {friends.length === 0 ? (
-            <p className="empty">No friends yet 🥲</p>
+            <p className="fr-empty">No friends yet 🥲</p>
           ) : (
             friends.map((f) => (
-              <div className="friend-row" key={f._id} onClick={()=>navigate(`/dashboard/${f.userName}`)}
-              style={{cursor:"pointer"}}>
-                <div className="friend-left">
-                  <div className="avatar">
+              <div
+                className="fr-row"
+                key={f._id}
+                onClick={() => navigate(`/dashboard/${f.userName}`)}
+              >
+                <div className="fr-left">
+                  <div className="fr-avatar">
                     {f.userName.charAt(0).toUpperCase()}
                   </div>
 
                   <div>
                     <h4>{f.userName}</h4>
-
-                    {/* ---- SCORE + RANK ---- */}
-                    <div className="meta">
-                      <span className="score">
+                    <div className="fr-meta">
+                      <span className="fr-score">
                         <Trophy size={13} />
                         {f.score}
                       </span>
@@ -79,9 +132,12 @@ function Friends() {
                 </div>
 
                 <button
-                  className="remove-btn"
-                  title="Remove friend"
-                  onClick={() => removeFriend(f._id)}
+                  className="fr-remove"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFriend(f.userName);
+                  }}
+                  title="Remove Friend"
                 >
                   <UserMinus size={16} />
                 </button>
@@ -91,37 +147,46 @@ function Friends() {
         </div>
       )}
 
-      {/* ---------- REQUESTS ---------- */}
-      {requests!=null && activeTab === "requests" && (
-        <div className="friends-list" >
+      {requests != null && activeTab === "requests" && (
+        <div className="fr-list">
           {requests.length === 0 ? (
-            <p className="empty">No pending requests ✨</p>
+            <p className="fr-empty">No pending requests ✨</p>
           ) : (
             requests.map((r) => (
-              <div className="friend-row" key={r._id} onClick={()=>navigate(`/dashboard/${r.userName}`)}
-              style={{cursor:"pointer"}}>
-                <div className="friend-left">
-                  <div className="avatar alt">
+              <div
+                className="fr-row"
+                key={r._id}
+                onClick={() => navigate(`/dashboard/${r.userName}`)}
+              >
+                <div className="fr-left">
+                  <div className="fr-avatar fr-alt">
                     {r.userName.charAt(0).toUpperCase()}
                   </div>
+
                   <div>
                     <h4>{r.userName}</h4>
-                    <p className="subtext">wants to connect</p>
+                    <p className="fr-subtext">wants to connect</p>
                   </div>
                 </div>
 
-                <div className="request-actions">
+                <div className="fr-actions">
                   <button
-                    className="accept"
-                    title="accept"
-                    onClick={() => acceptRequest(r._id)}
+                    className="fr-accept"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      acceptRequest(r.userName);
+                    }}
+                    title="Accept"
                   >
                     <Check size={16} />
                   </button>
                   <button
-                    className="reject"
-                    title="reject"
-                    onClick={() => rejectRequest(r._id)}
+                    className="fr-reject"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      rejectRequest(r.userName);
+                    }}
+                    title="Reject"
                   >
                     <X size={16} />
                   </button>

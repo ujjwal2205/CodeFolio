@@ -221,6 +221,11 @@
   color: #6366f1;
   padding-left: 22px;
 }
+.edit-btn:hover{
+   background: rgba(99, 102, 241, 0.18);
+  color: #6366f1;
+  padding-left: 22px;
+}
 
 .logout-btn:hover {
   background: rgba(236, 72, 153, 0.22);

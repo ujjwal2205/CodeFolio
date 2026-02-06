@@ -6,6 +6,7 @@ function StoreProvider(props) {
   const [user,setUser]=useState([]);
   const [friends,setFriends]=useState(null);
   const [requests,setRequests]=useState(null);
+  const [friendRequestSent,setFriendRequestSent]=useState(false);
  const checkAuth=async()=>{
   try {
     const response=await axios.post(url+"/api/user/me",{},{withCredentials:true});
@@ -14,6 +15,28 @@ function StoreProvider(props) {
         userName:response.data.userName,
         email:response.data.email
       })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+ }
+ const fetchFriendsAndRequests2=async()=>{
+  try {
+    const [r1,r2]=await Promise.all([
+      axios.post(url+"/api/friends/getFriends",{},{withCredentials:true}),
+      axios.post(url+`/api/friends/getFriendRequests/${user?.userName}`,{},{withCredentials:true})
+    ]); 
+    if(r1.data.success){
+      setFriends(r1.data.friends);
+    }
+    else{
+      console.log(r1.data.message);
+    }
+    if(r2.data.success){
+      setRequests(r2.data.requests);
+    }
+    else{
+      console.log(r2.data.message);
     }
   } catch (error) {
     console.log(error);
@@ -50,7 +73,7 @@ const fetchFriendsAndRequests=async()=>{
  },[]);
 
   const contextValue={
-    url,user,checkAuth,friends,requests
+    url,user,checkAuth,friends,requests,setFriends,setRequests,fetchFriendsAndRequests2,friendRequestSent,setFriendRequestSent
   };
   return (
     <StoreContext.Provider value={contextValue}>

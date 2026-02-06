@@ -5,105 +5,86 @@ import { Link } from "react-router-dom";
 import "./LeaderBoardPreview.css";
 import axios from "axios";
 import { toast } from "react-toastify";
-function LeaderBoardPreview({login}) {
-  const {url,user}=useContext(StoreContext);
+
+function LeaderBoardPreview({ login }) {
+  const { url, user } = useContext(StoreContext);
+
   const leaders = [
-    { rank: 1, name: "coder_***", score: "9120 pts" },
-    { rank: 2, name: "dev_***", score: "8840 pts" },
-    { rank: 3, name: "algo_***", score: "8605 pts" },
+    { rank: 1, name: "coder_***", score: "9120" },
+    { rank: 2, name: "dev_***", score: "8840" },
+    { rank: 3, name: "algo_***", score: "8605" },
   ];
-  const[data,setData]=useState([]); 
-  useEffect(()=>{
-    
-  if(login && user?.userName){
-  const fetchLeaderBoard=async()=>{
+
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (login && user?.userName) {
+      const fetchLeaderBoard = async () => {
         try {
-          const response=await axios.post(url+`/api/Leaderboard/fetchLeaderBoard/${user.userName}`,{},{withCredentials:true});
-          if(response.data.success){
+          const response = await axios.post(
+            `${url}/api/Leaderboard/fetchLeaderBoard/${user.userName}`,
+            {},
+            { withCredentials: true }
+          );
+
+          if (response.data.success) {
             setData(response.data.data);
-          }
-          else{
+          } else {
             toast.error(response.data.message);
           }
         } catch (error) {
           toast.error(error.message);
-          console.log(error);
         }
-      }
+      };
       fetchLeaderBoard();
     }
-  },[user,login]);
-  const loggedIn = login;
+  }, [user, login]);
 
   return (
-    <section className="leaderboard-showcase">
-      <div className="ls-container">
+    <section className="lb-showcase">
+      <div className="lb-container">
         <h2>Top Coders</h2>
-        <p className="ls-subtitle">
+        <p className="lb-subtitle">
           See who’s dominating competitive coding right now
         </p>
-        {login?(
-        <div className="leader-cards">
-          {data.slice(0,3).map((user,index) => (
+
+        <div className="lb-cards">
+          {(login ? data : leaders).slice(0, 3).map((u, index) => (
             <div
-              key={index+1}
-              className={`leader-card rank-${index+1}`}
+              key={index}
+              className={`lb-card lb-rank-${index + 1}`}
             >
-              {!loggedIn && (
-                <div className="card-overlay">
+              {!login && (
+                <div className="lb-overlay">
                   <FaLock />
                 </div>
               )}
 
-              <div className="rank">#{index+1}</div>
-              <FaTrophy className="trophy" />
-              <h3 className={!loggedIn ? "locked" : ""}>
-                {user.userName}
+              <div className="lb-rank">#{index + 1}</div>
+              <FaTrophy className="lb-trophy" />
+
+              <h3 className={!login ? "lb-locked" : ""}>
+                {login ? u.userName : u.name}
               </h3>
-              <span className={`score ${!loggedIn ? "locked" : ""}`}>
-                {user.score} pts
+
+              <span className={`lb-score ${!login ? "lb-locked" : ""}`}>
+                {u.score} pts
               </span>
             </div>
           ))}
         </div>
-        ):(
-           <div className="leader-cards">
-          {leaders.slice(0,3).map((user,index) => (
-            <div
-              key={index+1}
-              className={`leader-card rank-${index+1}`}
-            >
-              {!loggedIn && (
-                <div className="card-overlay">
-                  <FaLock />
-                </div>
-              )}
 
-              <div className="rank">#{index+1}</div>
-              <FaTrophy className="trophy" />
-              <h3 className={!loggedIn ? "locked" : ""}>
-                {user.name}
-              </h3>
-              <span className={`score ${!loggedIn ? "locked" : ""}`}>
-                {user.score} pts
-              </span>
-            </div>
-          ))}
-        </div>
-        )
-
-        }
-        {loggedIn ? (
-          <div className="ls-lock">
-            <Link to="/leaderboard" className="ls-btn">
+        {login ? (
+          <div className="lb-footer">
+            <Link to="/leaderboard" className="lb-btn">
               Explore Full Leaderboard
             </Link>
           </div>
         ) : (
-          <div className="ls-lock">
+          <div className="lb-footer">
             <FaLock />
             <p>Sign in to view full leaderboard & compete globally</p>
-            <Link to="/login" className="ls-btn">
+            <Link to="/login" className="lb-btn">
               Unlock Leaderboard
             </Link>
           </div>

@@ -2,10 +2,10 @@ import { linkedInChange,twitterChange,leetcodeHandleChange,codeChefHandleChange,
 import authMiddleware from "../Middlewares/authMiddleware.js";
 import express from "express";
 const changeRouter=express.Router();
-changeRouter.post("/leetCodeHandle",leetcodeHandleChange);
-changeRouter.post("/codeForcesHandle",codeForcesHandleChange);
-changeRouter.post("/codeChefHandle",codeChefHandleChange);
-changeRouter.post("/userName",userNameChange);
-changeRouter.post("/linkedInChange",linkedInChange);
-changeRouter.post("/XChange",twitterChange);
+changeRouter.post("/leetCodeHandle",authMiddleware,leetcodeHandleChange);
+changeRouter.post("/codeForcesHandle",authMiddleware,codeForcesHandleChange);
+changeRouter.post("/codeChefHandle",authMiddleware,codeChefHandleChange);
+changeRouter.post("/userName",authMiddleware,userNameChange);
+changeRouter.post("/linkedInChange",authMiddleware,linkedInChange);
+changeRouter.post("/XChange",authMiddleware,twitterChange);
 export default changeRouter;
