@@ -1,12 +1,12 @@
 import userModel from "../models/userModel.js";
 const linkedInChange=async(req,res)=>{
  const {handle}=req.body;
- const userName=req.user.userName;
+ const userId=req.user.userId;
  try {
     if(handle==""){
         return res.json({success:false,message:"Handle is empty."});
     }
-    const user=await userModel.findOne({userName});
+    const user=await userModel.findById(userId);
     if(!user){
         return res.json({success:false,message:"user doesn't exist"});
     }
@@ -20,12 +20,12 @@ const linkedInChange=async(req,res)=>{
 }
 const twitterChange=async(req,res)=>{
     const{handle}=req.body;
-    const userName=req.user.userName;
+    const userId=req.user.userId;
     try {
     if(handle==""){
         return res.json({success:false,message:"Handle is empty."})
     }
-    const user=await userModel.findOne({userName});
+    const user=await userModel.findById(userId);
     if(!user){
         return res.json({success:false,message:"user doesn't exist"});
     }
@@ -39,12 +39,12 @@ catch(error){
 }}
 const leetcodeHandleChange=async(req,res)=>{
     const {handle}=req.body;
-    const userName=req.user.userName;
+    const userId=req.user.userId;
     try {
         if(handle==""){
             return res.json({success:false,message:"Handle is Empty."});
         }
-        let user=await userModel.findOne({userName});
+        let user=await userModel.findById(userId);
         if(!user){
             return res.json({success:false,message:"User doesn't exist"});
         }
@@ -58,12 +58,12 @@ const leetcodeHandleChange=async(req,res)=>{
 }
 const codeForcesHandleChange=async(req,res)=>{
     const {handle}=req.body;
-    const userName=req.user.userName;
+    const userId=req.user.userId;
     try {
         if(handle==""){
             return res.json({success:false,message:"Handle is Empty."});
         }
-        let user=await userModel.findOne({userName});
+        let user=await userModel.findById(userId);
         if(!user){
             return res.json({success:false,message:"User doesn't exist"});
         }
@@ -77,12 +77,12 @@ const codeForcesHandleChange=async(req,res)=>{
 }
 const codeChefHandleChange=async(req,res)=>{
     const {handle}=req.body;
-    const userName=req.user.userName;
+    const userId=req.user.userId;
     try {
         if(handle==""){
             return res.json({success:false,message:"Handle is Empty."});
         }
-        let user=await userModel.findOne({userName});
+        let user=await userModel.findById(userId);
         if(!user){
             return res.json({success:false,message:"User doesn't exist"});
         }
@@ -96,13 +96,13 @@ const codeChefHandleChange=async(req,res)=>{
 }
 const userNameChange=async(req,res)=>{
     const{newUserName}=req.body;
-    const userName=req.user.userName;
+    const userId=req.user.userId;
     try {
         const normalizedUserName=newUserName.toLowerCase().trim();
         if(!normalizedUserName){
             return res.json({success:false,message:"Enter Valid Username."});
         }
-        let user=await userModel.findOne({userName});
+        let user=await userModel.findById(userId);
         let alreadyExists=await userModel.findOne({userName:normalizedUserName});
         if(!user){
             return res.json({success:false,message:"User doesn't exist"});

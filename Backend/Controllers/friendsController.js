@@ -1,10 +1,10 @@
 import userModel from "../models/userModel.js";
 const sendFriendRequest=async(req,res)=>{
     const {receiverUserName}=req.body;
-    const userName=req.user.userName;
+    const userId=req.user.userId;
     try {
         const normalizedUserName=receiverUserName.toLowerCase().trim();
-        let sender=await userModel.findOne({userName});
+        let sender=await userModel.findById(userId);
         if(!sender){
             return res.json({success:false,message:"Sender doesn't exist."});
         }
@@ -31,7 +31,7 @@ const sendFriendRequest=async(req,res)=>{
 }
 const acceptFriendRequest=async(req,res)=>{
     const {senderUserName}=req.body;
-    const userName=req.user.userName;
+    const userId=req.user.userId;
     try {
         const normalizedSenderUserName=senderUserName.toLowerCase().trim();
         if(!normalizedSenderUserName){
@@ -41,7 +41,7 @@ const acceptFriendRequest=async(req,res)=>{
         if(!sender){
             return res.json({success:false,message:"Sender not found."});
         }
-        const receiver=await userModel.findOne({userName});
+        const receiver=await userModel.findById(userId);
         if(!receiver){
             return res.json({success:false,message:"Receiver not found."});
         }
@@ -60,7 +60,7 @@ const acceptFriendRequest=async(req,res)=>{
 }
 const rejectFriendRequest=async(req,res)=>{
     const {senderUserName}=req.body;
-    const userName=req.user.userName;
+    const userId=req.user.userId;
     try {
         const normalizedSenderUserName=senderUserName.toLowerCase().trim();
         if(!normalizedSenderUserName){
@@ -70,7 +70,7 @@ const rejectFriendRequest=async(req,res)=>{
         if(!sender){
             return res.json({success:false,message:"Sender not found."});
         }
-        const receiver=await userModel.findOne({userName});
+        const receiver=await userModel.findById(userId);
         if(!receiver){
             return res.json({success:false,message:"Receiver not found."});
         }
@@ -86,13 +86,13 @@ const rejectFriendRequest=async(req,res)=>{
 }
 const removeFriend=async(req,res)=>{
     const {friendUserName}=req.body;
-    const userName=req.user.userName;
+    const userId=req.user.userId;
     try {
         const normalizedFriendUserName=friendUserName.toLowerCase().trim();
         if(!normalizedFriendUserName){
             return res.json({success:false,message:"Invalid UserName"});
         }
-        const user=await userModel.findOne({userName});
+        const user=await userModel.findById(userId);
         if(!user){
             return res.json({success:false,message:"Your db entry not found!"});
         }
@@ -115,9 +115,9 @@ const removeFriend=async(req,res)=>{
     }
 }
 const getFriends=async(req,res)=>{
-    const userName=req.user.userName;
+    const userId=req.user.userId;
     try {
-        let user=await userModel.findOne({userName});
+        let user=await userModel.findById(userId);
         if(!user){
             return res.json({success:false,message:"User not found."});
         }

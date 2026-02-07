@@ -8,7 +8,7 @@ const authMiddleware=(req,res,next)=>{
         const decode=jwt.verify(token,process.env.JWT_SECRET);
         req.user=req.user||{};
         req.user.email=decode.email;
-        req.user.userName=decode.userName;
+        req.user.userId=decode.userId;
         next();
     } catch (error) {
         console.log(error);

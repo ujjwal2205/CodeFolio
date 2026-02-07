@@ -4,7 +4,7 @@ import validator from "validator";
 import jwt from "jsonwebtoken";
 import verifyGoogleToken from "../Middlewares/googleAuth.js";
 const createToken=(user)=>{
-    return jwt.sign({email:user.email,userName:user.userName},process.env.JWT_SECRET,{ expiresIn: "7d" });
+    return jwt.sign({email:user.email,userId:user._id},process.env.JWT_SECRET,{ expiresIn: "7d" });
 }
 // Sign Up
 const signUp=async(req,res)=>{
@@ -145,13 +145,14 @@ const googleLogin=async(req,res)=>{
 }
 //fetchUserId
 const fetchUserId=async(req,res)=>{
-    const {email,userName}=req.user;
+    const {email,userId}=req.user;
     try {
         const normalizedEmail=email.toLowerCase();
-        const user=await userModel.findOne({email:normalizedEmail});
+        const user=await userModel.findById(userId);
         if(!user){
             return res.json({success:false,message:"User doesn't exist."});
         }
+        const userName=user.userName;
         return res.json({success:true,userName,email:normalizedEmail});
     } catch (error) {
         console.log(error);
