@@ -1,9 +1,9 @@
 import React from 'react'
 import Login from '../../Components/Login/Login.jsx'
-function LoginPage({login,setLogin}) {
+function LoginPage() {
   return (
     <div>
-      <Login login={login} setLogin={setLogin}/>
+      <Login />
     </div>
   )
 }

@@ -108,6 +108,7 @@
   color: #e0e0e0;
   cursor: pointer;
   transition: all 0.25s ease;
+  min-width: 250px;
 }
 
 .codefolio-btn:hover {

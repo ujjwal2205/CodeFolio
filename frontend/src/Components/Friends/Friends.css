@@ -1,4 +1,3 @@
-/* ---------- PAGE ---------- */
 .fr-page {
   padding: 1.8rem;
   background: #0b0f19;
@@ -10,8 +9,6 @@
   font-size: 1.6rem;
   margin-bottom: 1.2rem;
 }
-
-/* ---------- TABS ---------- */
 .fr-tabs {
   display: flex;
   gap: 14px;
@@ -43,14 +40,12 @@
   color: #fff;
 }
 
-/* ---------- LIST ---------- */
 .fr-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* ---------- ROW ---------- */
 .fr-row {
   background: linear-gradient(180deg, #111827, #0f172a);
   padding: 14px 18px;
@@ -68,14 +63,12 @@
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
 }
 
-/* ---------- LEFT ---------- */
 .fr-left {
   display: flex;
   align-items: center;
   gap: 14px;
 }
 
-/* ---------- AVATAR ---------- */
 .fr-avatar {
   width: 46px;
   height: 46px;
@@ -87,13 +80,34 @@
   font-weight: 800;
   font-size: 1.1rem;
   color: #020617;
+  position: relative;
 }
 
 .fr-avatar.fr-alt {
   background: linear-gradient(135deg, #34d399, #22c55e);
 }
 
-/* ---------- TEXT ---------- */
+.status-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+
+  border: 2px solid #0b0f19; 
+  z-index: 2;
+}
+
+.status-dot.online {
+  background-color: #22c55e;
+}
+
+.status-dot.offline {
+  background-color: #ef4444;
+}
+
 .fr-left h4 {
   font-size: 1rem;
   margin-bottom: 4px;
@@ -104,7 +118,6 @@
   color: #9ca3af;
 }
 
-/* ---------- META ---------- */
 .fr-meta {
   display: flex;
   align-items: center;
@@ -119,7 +132,6 @@
   color: #d1d5db;
 }
 
-/* ---------- REMOVE ---------- */
 .fr-remove {
   background: rgba(239, 68, 68, 0.15);
   border: none;
@@ -135,7 +147,6 @@
   transform: scale(1.1);
 }
 
-/* ---------- REQUEST ACTIONS ---------- */
 .fr-actions {
   display: flex;
   gap: 8px;
@@ -162,7 +173,6 @@
   color: #ef4444;
 }
 
-/* ---------- STATES ---------- */
 .fr-empty {
   text-align: center;
   color: #9ca3af;

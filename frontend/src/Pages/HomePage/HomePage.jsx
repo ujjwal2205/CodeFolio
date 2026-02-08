@@ -5,7 +5,7 @@ import HowItWorks from '../../Components/howItWorks/howItWorks.jsx';
 import WhyCodeFolio from '../../Components/WhyCodeFolio/WhyCodeFolio.jsx';
 import LeaderBoardPreview from '../../Components/LeaderBoardPreview/LeaderBoardPreview.jsx';
 import { toast } from 'react-toastify';
-function HomePage({login}) {
+function HomePage() {
   const location=useLocation();
   const navigate=useNavigate();
   useEffect(()=>{
@@ -27,10 +27,10 @@ function HomePage({login}) {
   },[location,navigate]);
   return (
     <div>
-      <Header login={login}/>
+      <Header/>
       <HowItWorks/>
       <WhyCodeFolio/>
-      <LeaderBoardPreview login={login}/>
+      <LeaderBoardPreview />
     </div>
   )
 }

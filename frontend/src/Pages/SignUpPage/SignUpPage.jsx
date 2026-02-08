@@ -1,9 +1,9 @@
 import React from 'react'
 import SignUp from '../../Components/SignUp/SignUp.jsx'
-function SignUpPage({login,setLogin}) {
+function SignUpPage() {
   return (
     <div>
-      <SignUp login={login} setLogin={setLogin}/>
+      <SignUp />
     </div>
   )
 }

@@ -182,6 +182,7 @@
         }
       }
       fetchData();
+      console.log(data);
     },[userName]);
     return (
       <div className="dashboard-root">

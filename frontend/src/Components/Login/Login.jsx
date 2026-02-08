@@ -7,8 +7,8 @@ import "./Login.css";
 import {toast} from 'react-toastify';
 import { Link } from "react-router-dom";
 import axios from "axios";
-function Login({login,setLogin}) {
-  const { url,checkAuth,fetchFriendsAndRequests } = useContext(StoreContext);
+function Login() {
+  const { url,checkAuth,fetchFriendsAndRequests,login,setLogin } = useContext(StoreContext);
   const navigate=useNavigate();
   const [showPassword,setShowPassword]=useState(false);
   const [data, setData] = useState({

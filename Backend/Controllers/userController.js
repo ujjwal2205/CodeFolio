@@ -153,7 +153,7 @@ const fetchUserId=async(req,res)=>{
             return res.json({success:false,message:"User doesn't exist."});
         }
         const userName=user.userName;
-        return res.json({success:true,userName,email:normalizedEmail});
+        return res.json({success:true,userName,email:normalizedEmail,userId});
     } catch (error) {
         console.log(error);
         return res.json({success:false,message:error.message});

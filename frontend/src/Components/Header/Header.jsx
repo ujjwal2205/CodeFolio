@@ -1,8 +1,10 @@
-import React,{useEffect} from "react";
+import React,{useEffect,useContext} from "react";
 import { Link } from "react-router-dom";
+import { StoreContext } from "../../context/StoreContext.jsx";
 import "./Header.css";
 
-function Header({login}) {
+function Header() {
+  const{login}=useContext(StoreContext);
   useEffect(()=>{
   },[login]);
     const isAuthenticated=()=>{

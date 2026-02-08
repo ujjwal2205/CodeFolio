@@ -6,8 +6,8 @@ import "./LeaderBoardPreview.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-function LeaderBoardPreview({ login }) {
-  const { url, user } = useContext(StoreContext);
+function LeaderBoardPreview() {
+  const { url, user,login } = useContext(StoreContext);
 
   const leaders = [
     { rank: 1, name: "coder_***", score: "9120" },

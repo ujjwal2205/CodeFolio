@@ -6,8 +6,8 @@ import './Navbar.css';
 import { useLocation,useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { toast } from 'react-toastify';
-function Navbar({login,setLogin}) {
-    const {url,user,requests}=useContext(StoreContext);
+function Navbar() {
+    const {url,user,requests,login,setLogin,socket}=useContext(StoreContext);
     const location=useLocation();
     const navigate=useNavigate();
     const [dropdown,setDropdown]=useState(false);
@@ -27,6 +27,7 @@ function Navbar({login,setLogin}) {
         try {
             const response=await axios.post(url+"/api/user/logOut",{},{ withCredentials: true });
             if(response.data.success){
+                socket.emit("unregister");
                 setLogin(false);
                 toast.success(response.data.message);
             }
@@ -100,7 +101,7 @@ function Navbar({login,setLogin}) {
            <FaUserCircle/>
            </div>
            <div className={`user-dropdown ${dropdown?"show":""}`}>
-           <Link to={`/dashboard/${user.userName}`} className='friends-page-btn' onClick={toggleDropdown}>Dashboard</Link>
+           <Link to={`/dashboard/${user?.userName}`} className='friends-page-btn' onClick={toggleDropdown}>Dashboard</Link>
            <Link to="/friends" className='friends-page-btn' onClick={toggleDropdown}>Friends
            {requests?.length>0 && <span className='red-dot'></span>}
            </Link>

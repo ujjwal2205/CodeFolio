@@ -8,9 +8,11 @@ import axios from "axios";
 import Swal from "sweetalert2";
 function Friends() {
   const [activeTab, setActiveTab] = useState("friends");
-  const { friends, requests,setFriends,setRequests,url,fetchFriendsAndRequests2 } = useContext(StoreContext);
+  const { friends, requests,setFriends,setRequests,url,fetchFriendsAndRequests2,onlineUsers } = useContext(StoreContext);
   const navigate = useNavigate();
-
+  const isOnline=(friendId)=>{
+    return onlineUsers.includes(friendId);
+  }
   useEffect(() => {
     console.log(friends);
   }, [friends,requests]);
@@ -118,8 +120,8 @@ function Friends() {
                 <div className="fr-left">
                   <div className="fr-avatar">
                     {f.userName.charAt(0).toUpperCase()}
+                    <span className={`status-dot ${isOnline(f._id) ? "online" : "offline"}`}/>
                   </div>
-
                   <div>
                     <h4>{f.userName}</h4>
                     <div className="fr-meta">

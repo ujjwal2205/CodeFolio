@@ -1,20 +1,18 @@
-import React from "react";
+import React,{useContext} from "react";
 import { Link } from "react-router-dom";
+import { StoreContext } from "../../context/StoreContext.jsx";
 import { FaGithub, FaLinkedin, FaTwitter, FaHeart } from "react-icons/fa";
 import "./Footer.css";
 
 function Footer() {
-  const isAuthenticated = () => {
-    return !!localStorage.getItem("token");
-  };
-
-  const loggedIn = isAuthenticated();
+  const{login}=useContext(StoreContext);
 
   return (
     <footer className="footer">
       <div className="footer-top">
         <div className="footer-brand">
-          <h2>CodeFolio</h2>
+           <span className="footer-code">Code</span>
+          <span className="footer-folio">Folio</span>
           <p>
             Track your coding journey, compete globally, and showcase your
             achievements in one place.
@@ -29,20 +27,20 @@ function Footer() {
           <h4>Quick Links</h4>
           <Link to="/about">About Us</Link>
           <Link to="/#why-codefolio">Why CodeFolio</Link>
-          {loggedIn ? (
+          {login ? (
             <Link to="/dashboard">Dashboard</Link>
           ) : (
             <Link to="/signUp">Get Started</Link>
           )}
         </div>
         <div className="footer-cta">
-          <h4>{loggedIn ? "Welcome Back!" : "Join CodeFolio"}</h4>
+          <h4>{login ? "Welcome Back!" : "Join CodeFolio"}</h4>
           <p>
-            {loggedIn
+            {login
               ? "Go to your dashboard to track progress and compete globally."
               : "Start tracking your coding journey and build your public profile today."}
           </p>
-          {loggedIn ? (
+          {login ? (
             <Link to="/dashboard" className="cta-btn">
               Go to Dashboard
             </Link>

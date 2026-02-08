@@ -2,6 +2,8 @@ import userModel from "../models/userModel.js";
 const sendFriendRequest=async(req,res)=>{
     const {receiverUserName}=req.body;
     const userId=req.user.userId;
+    const io=req.app.get("io");
+    const onlineUsers=req.app.get("onlineUsers");
     try {
         const normalizedUserName=receiverUserName.toLowerCase().trim();
         let sender=await userModel.findById(userId);
@@ -23,6 +25,17 @@ const sendFriendRequest=async(req,res)=>{
         }
         receiver.friendRequests.push(sender._id);
         await receiver.save();
+        const receiverSocketId=onlineUsers.get(receiver._id.toString());
+        if(receiverSocketId){
+            io.to(receiverSocketId).emit("friendRequestReceived",{
+                userName:sender.userName,
+                userId:sender._id,
+                score:sender.score,
+                leetCode:sender.leetCode,
+                codeChef:sender.codeChef,
+                codeForces:sender.codeForces
+            })
+        }
         return res.json({success:true,message:"Friend Request Sent"});
     } catch (error) {
         console.log(error);
@@ -32,6 +45,8 @@ const sendFriendRequest=async(req,res)=>{
 const acceptFriendRequest=async(req,res)=>{
     const {senderUserName}=req.body;
     const userId=req.user.userId;
+    const io=req.app.get("io");
+    const onlineUsers=req.app.get("onlineUsers");
     try {
         const normalizedSenderUserName=senderUserName.toLowerCase().trim();
         if(!normalizedSenderUserName){
@@ -52,6 +67,14 @@ const acceptFriendRequest=async(req,res)=>{
         sender.friends.push(receiver._id);
         await receiver.save();
         await sender.save();
+        const senderSocketId=onlineUsers.get(sender._id.toString());
+        if(senderSocketId){
+            io.to(senderSocketId).emit("friendRequestAccepted",{
+                _id:receiver._id,
+                userName:receiver.userName,
+                score:receiver.score
+            })
+        }
         return res.json({success:true,message:"Friend request accepted."});
     } catch (error) {
         console.log(error);
@@ -87,6 +110,8 @@ const rejectFriendRequest=async(req,res)=>{
 const removeFriend=async(req,res)=>{
     const {friendUserName}=req.body;
     const userId=req.user.userId;
+    const io=req.app.get("io");
+    const onlineUsers=req.app.get("onlineUsers");
     try {
         const normalizedFriendUserName=friendUserName.toLowerCase().trim();
         if(!normalizedFriendUserName){
@@ -108,6 +133,10 @@ const removeFriend=async(req,res)=>{
         )
         await user.save();
         await friend.save();
+        const friendSocketId=onlineUsers.get(friend._id.toString());
+        if(friendSocketId){
+            io.to(friendSocketId).emit("friendRemoved",{_id:user._id,userName:user.userName});
+        }
         return res.json({success:true,message:"Friend Removed Successfully."});
     } catch (error) {
         console.log(error);

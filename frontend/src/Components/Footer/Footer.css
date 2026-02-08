@@ -14,11 +14,20 @@
   margin: auto;
 }
 
-.footer-brand h2 {
+
+.footer-code {
+  color: #facc15;
   font-size: 2rem;
   font-weight: 800;
-  color: #facc15;
-  margin-bottom: 0.8rem;
+   margin-bottom: 0.8rem;
+  text-shadow: 0 0 2px rgba(250,204,21,0.35);
+}
+
+.footer-folio {
+  font-size: 2rem;
+  font-weight: 800;
+   margin-bottom: 0.8rem;
+  color: #f1f5f9;
 }
 
 .footer-brand p {

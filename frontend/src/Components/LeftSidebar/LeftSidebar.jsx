@@ -89,7 +89,7 @@ function LeftSidebar({ active, setActive,data }) {
       </button>
       )}
       {user.userName==data.userName && 
-      <button className="codefolio-btn">Get your Codefolio Card</button>
+      <Link to={`/card/${user.userName}`} state={{data}}><button className="codefolio-btn">Get your Codefolio Card</button></Link>
       }
       <div className="menu">
         <div className={`menu-item ${active === "overview" ? "active" : ""}`}>
