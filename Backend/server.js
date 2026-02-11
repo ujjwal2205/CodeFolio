@@ -6,6 +6,7 @@ import siteRouter from "./Routes/siteRoute.js";
 import passwordReset from "./Routes/passwordResetRoute.js";
 import Friends from "./Routes/friendsRoute.js";
 import LeaderBoard from "./Routes/leaderBoardRoute.js";
+import chat from "./Routes/chatRoute.js";
 import changeRouter from "./Routes/ChangeRoute.js";
 import cookieParser from "cookie-parser";
 import http from "http";
@@ -49,6 +50,12 @@ io.on("connection",(socket)=>{
         io.emit("onlineUsers",Array.from(onlineUsers.keys()));
         console.log("User disconnected. Online Users:",onlineUsers);
     })
+    socket.on("sendMessage",({senderId,receiverId,text})=>{
+        const receiverSocket=onlineUsers.get(receiverId);
+        if(receiverSocket){
+            io.to(receiverSocket).emit("getMessage",{senderId,text});
+        }
+    });
     socket.on("disconnect",()=>{
      for(let [key,value] of onlineUsers.entries()){
         if(value==socket.id){
@@ -69,6 +76,7 @@ app.use("/api/forgot-password",passwordReset);
 app.use("/api/friends",Friends);
 app.use("/api/Leaderboard",LeaderBoard);
 app.use("/api/change",changeRouter);
+app.use("/api/chat",chat);
 app.set("io",io);
 app.set("onlineUsers",onlineUsers);
 server.listen(port,()=>{
