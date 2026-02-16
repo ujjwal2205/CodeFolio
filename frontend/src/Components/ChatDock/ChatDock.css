@@ -1,0 +1,181 @@
+/* ============================= */
+/* Dock Container */
+/* ============================= */
+
+.chatdock-container {
+  position: fixed;
+  bottom: 0;
+  right: 20px;
+  width: 330px;
+  height: 480px;
+  background: #202033;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  border: 1px solid #333;
+  overflow: hidden;
+  z-index: 10000;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.chatdock-minimized {
+  height: 50px;
+  width: 280px;
+}
+
+/* ============================= */
+/* Header */
+/* ============================= */
+
+.chatdock-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  height: 50px;
+  background: #1a1a2e;
+  color: #facc15;
+  font-weight: 600;
+  font-size: 14px;
+  border-bottom: 1px solid #333;
+}
+
+.chatdock-title {
+  margin: 0;
+}
+
+.chatdock-minimize-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #facc15;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.chatdock-minimize-btn:hover {
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+/* ============================= */
+/* Chat List */
+/* ============================= */
+
+.chatdock-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 8px;
+}
+
+.chatdock-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.chatdock-list::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 10px;
+}
+
+.chatdock-list:hover::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* ============================= */
+/* Chat User Item */
+/* ============================= */
+
+.chatdock-user {
+  display: flex;
+  align-items: flex-start;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  margin-bottom: 4px;
+}
+
+.chatdock-user:hover {
+  background-color: #2a2a44;
+}
+
+/* ============================= */
+/* Avatar */
+/* ============================= */
+
+.chatdock-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #333;
+  color: #facc15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-right: 10px;
+  font-size: 15px;
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.chatdock-avatar::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #202033;
+  bottom: 0;
+  right: 0;
+}
+
+.chatdock-online::after {
+  background-color: #00c853;
+}
+
+.chatdock-offline::after {
+  background-color: #d50000;
+}
+
+/* ============================= */
+/* Chat Info */
+/* ============================= */
+
+.chatdock-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.chatdock-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.chatdock-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #facc15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chatdock-time {
+  font-size: 11px;
+  color: #cfcfcf;
+}
+
+.chatdock-last-message {
+  font-size: 13px;
+  color: #cfcfcf;
+  margin-top: 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

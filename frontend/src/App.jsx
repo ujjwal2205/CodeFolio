@@ -11,12 +11,16 @@ import LeaderboardPage from './Pages/LeaderboardPage/LeaderboardPage.jsx';
 import FriendsPage from './Pages/FriendsPage/FriendsPage.jsx';
 import EditPage from './Pages/EditPage/EditPage.jsx';
 import CardPage from './Pages/CardPage/CardPage.jsx';
+import ChatDock from './Components/ChatDock/ChatDock.jsx';
+import ChatWindow from './Components/ChatWindow/ChatWindow.jsx';
 import {Route,Routes} from 'react-router-dom';
 import Footer from './Components/Footer/Footer.jsx';
 function App() {
   return (
     <div>
     <ToastContainer/>
+      <ChatDock/>
+      <ChatWindow/>
       <Navbar />
       <Routes>
       <Route path='/' element={<HomePage/>}/>

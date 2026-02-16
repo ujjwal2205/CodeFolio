@@ -5,13 +5,41 @@ import { useMemo } from 'react';
 import {toast} from 'react-toastify'
 export const StoreContext=createContext();
 function StoreProvider(props) {
+  
   const url="http://localhost:4000";
+  const dummyMessages = {
+  c1: [
+    { senderId: "u2", text: "Bro kal milte hain?", timestamp: "2026-02-14T10:30:00" },
+    { senderId: "u1", text: "Haan bhai 7 baje", timestamp: "2026-02-14T10:32:00" }
+  ],
+  c2: [
+    { senderId: "u3", text: "Project ho gaya?", timestamp: "2026-02-13T16:10:00" },
+    { senderId: "u1", text: "Almost done", timestamp: "2026-02-13T16:12:00" }
+  ]
+};
   const [user,setUser]=useState(null);
   const [friends,setFriends]=useState([]);
   const [requests,setRequests]=useState([]);
   const [friendRequestSent,setFriendRequestSent]=useState(false);
   const [login,setLogin]=useState(false);
   const [onlineUsers,setOnlineUsers]=useState([]);
+  const [openChats,setOpenChats]=useState([]);
+  const [messages,setMessages]=useState(dummyMessages);
+  const openChat=(conversation)=>{
+    const exists=openChats.find(c=>c._id===conversation._id);
+    if(exists){
+      return;
+    }
+    let updatedChats=[...openChats,conversation];
+    if(updatedChats.length>3){
+      updatedChats=updatedChats.slice(1);
+    }
+    setOpenChats(updatedChats);
+    console.log(updatedChats);
+  }
+  const closeChat=(conversation)=>{
+    setOpenChats(prev=>prev.filter(c=>c._id!==conversation._id));
+  }
  const checkAuth=async()=>{
   try {
     const response=await axios.post(url+"/api/user/me",{},{withCredentials:true});
@@ -126,7 +154,7 @@ socket.off("friendRemoved",handler4);
 },[socket]);
 
   const contextValue={
-    url,user,checkAuth,friends,requests,setFriends,setRequests,fetchFriendsAndRequests2,friendRequestSent,setFriendRequestSent,login,setLogin,onlineUsers,socket
+    url,user,checkAuth,friends,requests,setFriends,setRequests,fetchFriendsAndRequests2,friendRequestSent,setFriendRequestSent,login,setLogin,onlineUsers,socket,openChat,closeChat,openChats,messages,setMessages
   };
   return (
     <StoreContext.Provider value={contextValue}>
