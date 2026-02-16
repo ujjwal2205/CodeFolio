@@ -4,6 +4,11 @@ const conversations=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"user"
     }],
+    unreadCount:{
+        type:Map,
+        of:Number,
+        default:{}
+    },
     lastMessage:{type:String,default:""}
     },{timestamps:true});
 const conversationsModel=mongoose.models.conversations || mongoose.model("conversations",conversations);

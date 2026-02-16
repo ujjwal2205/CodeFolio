@@ -25,6 +25,7 @@ function StoreProvider(props) {
   const [onlineUsers,setOnlineUsers]=useState([]);
   const [openChats,setOpenChats]=useState([]);
   const [messages,setMessages]=useState(dummyMessages);
+  const [conversations,setConversations]=useState([]);
   const openChat=(conversation)=>{
     const exists=openChats.find(c=>c._id===conversation._id);
     if(exists){
@@ -87,9 +88,10 @@ const fetchFriendsAndRequests=async()=>{
     return;
   }
   try {
-    const [r1,r2]=await Promise.all([
+    const [r1,r2,r3]=await Promise.all([
       axios.post(url+"/api/friends/getFriends",{},{withCredentials:true}),
-      axios.post(url+`/api/friends/getFriendRequests/${user?.userName}`,{},{withCredentials:true})
+      axios.post(url+`/api/friends/getFriendRequests/${user?.userName}`,{},{withCredentials:true}),
+      axios.post(url+"/api/chat/getConversations",{},{withCredentials:true})
     ]); 
     if(r1.data.success){
       setFriends(r1.data.friends);
@@ -102,6 +104,12 @@ const fetchFriendsAndRequests=async()=>{
     }
     else{
       console.log(r2.data.message);
+    }
+    if(r3.data.success){
+      setConversations(r3.data.data);
+    }
+    else{
+      console.log(r3.data.message);
     }
   } catch (error) {
     console.log(error);
@@ -154,7 +162,7 @@ socket.off("friendRemoved",handler4);
 },[socket]);
 
   const contextValue={
-    url,user,checkAuth,friends,requests,setFriends,setRequests,fetchFriendsAndRequests2,friendRequestSent,setFriendRequestSent,login,setLogin,onlineUsers,socket,openChat,closeChat,openChats,messages,setMessages
+    url,user,checkAuth,friends,requests,setFriends,setRequests,fetchFriendsAndRequests2,friendRequestSent,setFriendRequestSent,login,setLogin,onlineUsers,socket,openChat,closeChat,openChats,messages,setMessages,conversations
   };
   return (
     <StoreContext.Provider value={contextValue}>

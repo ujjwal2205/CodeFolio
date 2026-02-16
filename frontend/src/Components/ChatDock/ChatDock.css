@@ -179,3 +179,38 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+/* ============================= */
+/* Unread Highlight */
+/* ============================= */
+
+.chatdock-unread {
+  background-color: rgba(250, 204, 21, 0.06);
+}
+
+.chatdock-name.bold,
+.chatdock-last-message.bold {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* ============================= */
+/* Unread Badge */
+/* ============================= */
+
+.chatdock-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: #ff1744;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #202033;
+  padding: 0 4px;
+}

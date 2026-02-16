@@ -2,7 +2,7 @@ import {getConversations,getMessages,addMessage} from '../Controllers/chatContro
 import express from "express";
 import authMiddleware from '../Middlewares/authMiddleware.js';
 const chat=express.Router();
-chat.post("/getConversations",getConversations);
-chat.post("/getMessages",getMessages);
-chat.post("/addMessage",addMessage);
+chat.post("/getConversations",authMiddleware,getConversations);
+chat.post("/getMessages",authMiddleware,getMessages);
+chat.post("/addMessage",authMiddleware,addMessage);
 export default chat;

@@ -3,7 +3,7 @@ import { StoreContext } from "../../context/StoreContext.jsx";
 import "./ChatWindow.css";
 
 function ChatWindow() {
-  const { openChats, closeChat,messages,setMessages } = useContext(StoreContext);
+  const { openChats, closeChat,messages,setMessages,user } = useContext(StoreContext);
   const [inputMap, setInputMap] = useState({});
   const [minimizedChats,setMinimizedChats]=useState({});
   const scrollRefs = useRef({});
@@ -33,7 +33,7 @@ function ChatWindow() {
   return (
     <div className="chat-windows-container">
       {openChats.map((conv, index) => {
-        const otherUser = conv.members.find(m => m._id !== "u1");
+        const otherUser = conv.members.find(m => m._id !== user.userId);
         const isMinimized=minimizedChats[conv._id];
         return (
           <div
@@ -64,7 +64,7 @@ function ChatWindow() {
               {messages[conv._id]?.map((msg, idx) => (
                 <div
                   key={idx}
-                  className={`message ${msg.senderId === "u1" ? "self" : "other"}`}
+                  className={`message ${msg.senderId !== user.userId ? "self" : "other"}`}
                 >
                   <div className="message-text">
                    {msg.text}
@@ -72,11 +72,11 @@ function ChatWindow() {
                   <div className="message-time">
                   {new Date(msg.timestamp).toLocaleTimeString([], {
                   day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
+                  month: "short",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
                    })}
                  </div>
                 </div>

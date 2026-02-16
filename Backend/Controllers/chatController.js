@@ -3,7 +3,7 @@ import messagesModel from "../models/messagesModel.js";
 const getConversations=async(req,res)=>{
     const userId=req.user.userId;
     try {
-        const conversations=await conversationsModel.find({members:userId}).populate("members","userName").sort({updatedAt:-1});
+        const conversations=await conversationsModel.find({members:userId}).populate("members","userName").sort({updatedAt:-1}).lean();
         return res.json({success:true,data:conversations});
     } catch (error) {
         console.log(error);
@@ -21,12 +21,29 @@ const getMessages=async(req,res)=>{
     }
 }
 const addMessage=async(req,res)=>{
-    const {conversationId,text}=req.body;
+    const {conversationId,receiverId,text}=req.body;
     const senderId=req.user.userId;
     try {
-        const newMessage=await messagesModel.create({conversationId,senderId,text});
-        await conversationsModel.findByIdAndUpdate(conversationId,{lastMessage:text});
-        return res.json({success:true,newMessage});
+        let conversation;
+        if(conversationId){
+            conversation=await conversationsModel.findById(conversationId);
+        }
+        if(!conversation){
+            conversation= await conversationsModel.findOne({members:{$all:[senderId,receiverId]}});
+        }
+        if(!conversation){
+            conversation=await conversationsModel.create({
+                members:[senderId,receiverId],
+                unreadCount:{
+                    [senderId]:0,
+                    [receiverId]:0
+                },
+                lastMessage:""
+            });
+        }
+        const newMessage=await messagesModel.create({conversationId:conversation._id,senderId,text});
+        await conversationsModel.findByIdAndUpdate(conversation._id,{lastMessage:text,$inc:{[`unreadCount.${receiverId}`]:1}});
+        return res.json({success:true,newMessage,conversationId:conversation._id});
     } catch (error) {
         console.log(error);
         return res.json({success:false,message:error.message});
