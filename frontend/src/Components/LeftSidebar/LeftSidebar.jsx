@@ -10,18 +10,20 @@ import { StoreContext } from "../../context/StoreContext.jsx";
 import axios from "axios";
 function LeftSidebar({ active, setActive,data }) {
   const [psDropdown, setPsDropdown] = useState(true);
-  const {user,friends,requests,fetchFriendsAndRequests2,url,setFriendRequestSent}=useContext(StoreContext);
+  const {user,friends,requests,fetchFriendsAndRequests2,url,setFriendRequestSent,openChat}=useContext(StoreContext);
   const hasRequested=data.friendRequests?.some(
-    req=>req.userName==user.userName
+    req=>req?.userName==user?.userName
   )
   useEffect(() => {
      console.log(isFriend);
      console.log(hasRequested);
    }, [data.friendRequests]);
-  const isFriend=friends?.some(f=>f.userName==data.userName);
+  const isFriend=friends?.some(f=>f?.userName==data?.userName);
   const anotherUserRequested=requests?.some(r=>r.userName==data.userName);
   
   const handleRequest=async()=>{
+    if(data?.userName){
+    console.log(data.userName);
    try {
     const response=await axios.post(url+"/api/friends/sendFriendRequest",{
       receiverUserName:data.userName
@@ -39,16 +41,37 @@ function LeftSidebar({ active, setActive,data }) {
     toast.error(error.message);
    }
   }
+  }
+ const handleWindow =async () => {
+  if(data?.id){
+    console.log(data.id);
+  try {
+    const response=await axios.post(url+"/api/chat/getOrCreateConversations",{
+      receiverId:data.id
+    },{withCredentials:true})
+    if(response.data.success){
+      openChat(response.data.data);
+    }
+    else{
+      toast.error(response.data.message);
+    }
+  }
+  catch(error){
+    console.log(error);
+    toast.error(error.message);
+  }
+  }
+};
   return (
     <aside className="sidebar">
       <div className="profile-box">
-      {user.userName==data.userName &&
+      {user?.userName==data?.userName &&
         <div className="edit-profile-btn">
           <Link to="/edit"><FiEdit /></Link>
         </div>
       }
-        <div className="avatar">{data.userName[0]?.toUpperCase()}</div>
-        <h3>@{data.userName}</h3>
+        <div className="avatar">{data?.userName[0]?.toUpperCase()}</div>
+        <h3>@{data?.userName}</h3>
       </div>
       <div className="social-row">
         <FaEnvelope
@@ -80,16 +103,21 @@ function LeftSidebar({ active, setActive,data }) {
           title={data.twitter!=="" && `https://x.com/${data.twitter}`}
         />
       </div>
-       {( !anotherUserRequested && !hasRequested && !isFriend && user.userName !== data.userName) && (
+       {( !anotherUserRequested && !hasRequested && !isFriend && user?.userName !== data?.userName) ? (
        <button
        className="friend-btn"
        onClick={handleRequest}
        >
        Add Friend
       </button>
-      )}
-      {user.userName==data.userName && 
-      <Link to={`/card/${user.userName}`} state={{data}}><button className="codefolio-btn">Get your Codefolio Card</button></Link>
+      ):isFriend && (<button
+       className="friend-btn"
+       onClick={handleWindow}
+       >
+       Send Message
+      </button>)}
+      {user?.userName==data?.userName && 
+      <Link to={`/card/${user?.userName}`} state={{data}}><button className="codefolio-btn">Get your Codefolio Card</button></Link>
       }
       <div className="menu">
         <div className={`menu-item ${active === "overview" ? "active" : ""}`}>
@@ -119,7 +147,7 @@ function LeftSidebar({ active, setActive,data }) {
                 label="LeetCode"
                 active={active === "leetCode"}
                 onClick={() => setActive("leetCode")}
-                url={`https://www.leetcode.com/u/${data.leetCode.userName}`}
+                url={`https://www.leetcode.com/u/${data?.leetCode?.userName}`}
               />
             )}
             {data.codeChef && (
@@ -128,7 +156,7 @@ function LeftSidebar({ active, setActive,data }) {
                 label="CodeChef"
                 active={active === "codeChef"}
                 onClick={() => setActive("codeChef")}
-                url={`https://www.codechef.com/users/${data.codeChef.userName}`}
+                url={`https://www.codechef.com/users/${data?.codeChef?.userName}`}
               />
             )}
             {data.codeForces && (
@@ -137,7 +165,7 @@ function LeftSidebar({ active, setActive,data }) {
                 label="CodeForces"
                 active={active === "codeForces"}
                 onClick={() => setActive("codeForces")}
-                url={`https://codeforces.com/profile/${data.codeForces.userName}`}
+                url={`https://codeforces.com/profile/${data?.codeForces?.userName}`}
               />
             )}
           </div>

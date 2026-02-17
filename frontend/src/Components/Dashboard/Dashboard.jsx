@@ -55,6 +55,7 @@
               solvedStats:user.submitStats.acSubmissionNum,
               contest:lcRes.data.contest
             },
+          id:lcRes.data.id,
           email:lcRes.data.email,
           linkedIn:lcRes.data.linkedIn,
           twitter:lcRes.data.twitter,
@@ -80,6 +81,7 @@
           if (prev.email !== "") return prev;
           return {
           ...prev,
+          id:lcRes.data.id,
           email: lcRes.data.email,
           linkedIn: lcRes.data.linkedIn,
           twitter: lcRes.data.twitter,
@@ -97,6 +99,7 @@
               contestParticipated:user.contestParticipated,
               problemsSolved:user.problemsSolved
             },
+            id:ccRes.data.id,
             email:ccRes.data.email,
             linkedIn:ccRes.data.linkedIn,
             twitter:ccRes.data.twitter,
@@ -117,10 +120,11 @@
           if (prev.email !== "") return prev;
           return {
           ...prev,
-          email: lcRes.data.email,
-          linkedIn: lcRes.data.linkedIn,
-          twitter: lcRes.data.twitter,
-          userName: lcRes.data.userName
+          id:ccRes.data.id,
+          email: ccRes.data.email,
+          linkedIn: ccRes.data.linkedIn,
+          twitter: ccRes.data.twitter,
+          userName: ccRes.data.userName
           };
          });
           }
@@ -135,6 +139,7 @@
               problemsSolved:user.totalSolved,
               contest:user.contest,
             },
+            id:cfRes.data.id,
             email:cfRes.data.email,
             linkedIn:cfRes.data.linkedIn,
             twitter:cfRes.data.twitter,
@@ -155,10 +160,11 @@
           if (prev.email !== "") return prev;
           return {
           ...prev,
-          email: lcRes.data.email,
-          linkedIn: lcRes.data.linkedIn,
-          twitter: lcRes.data.twitter,
-          userName: lcRes.data.userName
+          id:cfRes.data.id,
+          email: cfRes.data.email,
+          linkedIn: cfRes.data.linkedIn,
+          twitter: cfRes.data.twitter,
+          userName: cfRes.data.userName
           };
          });
           }

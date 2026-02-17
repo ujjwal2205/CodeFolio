@@ -1,7 +1,3 @@
-/* ============================= */
-/* Dock Container */
-/* ============================= */
-
 .chatdock-container {
   position: fixed;
   bottom: 0;
@@ -25,9 +21,6 @@
   width: 280px;
 }
 
-/* ============================= */
-/* Header */
-/* ============================= */
 
 .chatdock-header {
   display: flex;
@@ -60,9 +53,6 @@
   transform: scale(1.1);
 }
 
-/* ============================= */
-/* Chat List */
-/* ============================= */
 
 .chatdock-list {
   flex: 1;
@@ -83,9 +73,6 @@
   background: #888;
 }
 
-/* ============================= */
-/* Chat User Item */
-/* ============================= */
 
 .chatdock-user {
   display: flex;
@@ -100,10 +87,6 @@
 .chatdock-user:hover {
   background-color: #2a2a44;
 }
-
-/* ============================= */
-/* Avatar */
-/* ============================= */
 
 .chatdock-avatar {
   width: 44px;
@@ -141,9 +124,6 @@
   background-color: #d50000;
 }
 
-/* ============================= */
-/* Chat Info */
-/* ============================= */
 
 .chatdock-info {
   flex: 1;
@@ -179,9 +159,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-/* ============================= */
-/* Unread Highlight */
-/* ============================= */
+
 
 .chatdock-unread {
   background-color: rgba(250, 204, 21, 0.06);
@@ -193,9 +171,6 @@
   color: #ffffff;
 }
 
-/* ============================= */
-/* Unread Badge */
-/* ============================= */
 
 .chatdock-badge {
   position: absolute;

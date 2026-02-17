@@ -24,19 +24,43 @@ function StoreProvider(props) {
   const [login,setLogin]=useState(false);
   const [onlineUsers,setOnlineUsers]=useState([]);
   const [openChats,setOpenChats]=useState([]);
-  const [messages,setMessages]=useState(dummyMessages);
+  const [messages,setMessages]=useState({});
   const [conversations,setConversations]=useState([]);
-  const openChat=(conversation)=>{
+  const openChat=async (conversation)=>{
     const exists=openChats.find(c=>c._id===conversation._id);
     if(exists){
       return;
     }
-    let updatedChats=[...openChats,conversation];
-    if(updatedChats.length>3){
-      updatedChats=updatedChats.slice(1);
+    try {
+      let updatedChats=[...openChats,conversation];
+      if(updatedChats.length>3){
+        updatedChats=updatedChats.slice(1);
+      }
+      setOpenChats(updatedChats);
+      console.log(updatedChats);
+      if(conversation._id){
+      const response=await axios.post(url+'/api/chat/getMessages',{
+        conversationId:conversation._id
+      },{withCredentials:true});
+      if(response.data.success){
+       setMessages(prev=>({
+        ...prev,
+        [conversation._id]:response.data.data
+       }));
+      }
+      else{
+        console.log(response.data.message);
+      }
     }
-    setOpenChats(updatedChats);
-    console.log(updatedChats);
+    else{
+      setMessages(prev=>({
+        ...prev,
+        ["temp-"+conversation.receiverId]:[]
+      }));
+    }
+    } catch (error) {
+      console.log(error);
+    }
   }
   const closeChat=(conversation)=>{
     setOpenChats(prev=>prev.filter(c=>c._id!==conversation._id));
