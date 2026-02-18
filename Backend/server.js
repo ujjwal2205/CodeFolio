@@ -30,6 +30,7 @@ const io=new Server(server,{
     }
 });
 const onlineUsers=new Map();
+const openChats=new Map();
 io.on("connection",(socket)=>{
     console.log("New user connected:",socket.id);
     socket.on("register",(userId)=>{
@@ -39,6 +40,20 @@ io.on("connection",(socket)=>{
         onlineUsers.set(userId,socket.id);
         io.emit("onlineUsers",Array.from(onlineUsers.keys()));
         console.log("Online Users:",onlineUsers);
+    })
+    socket.on("openChat",({userId,conversationId})=>{
+        if(!openChats.has(userId)){
+        openChats.set(userId,new Set());
+        }
+        openChats.get(userId).add(conversationId);
+    });
+    socket.on("closeChat",({userId,conversationId})=>{
+        if(openChats.has(userId)){
+            openChats.get(userId).delete(conversationId);
+            if(openChats.get(userId).size==0){
+                openChats.delete(userId);
+            }
+        }
     })
     socket.on("unregister",()=>{
         for(let [key,value] of onlineUsers){
@@ -50,12 +65,7 @@ io.on("connection",(socket)=>{
         io.emit("onlineUsers",Array.from(onlineUsers.keys()));
         console.log("User disconnected. Online Users:",onlineUsers);
     })
-    socket.on("sendMessage",({senderId,receiverId,text})=>{
-        const receiverSocket=onlineUsers.get(receiverId);
-        if(receiverSocket){
-            io.to(receiverSocket).emit("getMessage",{senderId,text});
-        }
-    });
+    
     socket.on("disconnect",()=>{
      for(let [key,value] of onlineUsers.entries()){
         if(value==socket.id){
@@ -79,6 +89,7 @@ app.use("/api/change",changeRouter);
 app.use("/api/chat",chat);
 app.set("io",io);
 app.set("onlineUsers",onlineUsers);
+app.set("openChats",openChats);
 server.listen(port,()=>{
     console.log(`Server started on http://localhost:${port}`);
 })

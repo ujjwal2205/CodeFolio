@@ -79,9 +79,7 @@ const codeChefHandleChange=async(req,res)=>{
     const {handle}=req.body;
     const userId=req.user.userId;
     try {
-        if(handle==""){
-            return res.json({success:false,message:"Handle is Empty."});
-        }
+        
         let user=await userModel.findById(userId);
         if(!user){
             return res.json({success:false,message:"User doesn't exist"});

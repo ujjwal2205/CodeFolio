@@ -151,7 +151,7 @@ const codeChef=async(req,res)=>{
     });
     user.score=(user.leetCodeSolved||0)+((user.codeForcesRating||0)*0.2)+((user.codeChefRating||0)*0.2);
     await user.save();
-    return res.json({success:true,rating,highestRating,stars,contestParticipated:Number(contestsParticipated),problemsSolved,id:user._id,email:normalizedEmail,linkedIn:user.linkedIn,twitter:user.twitter,userName:user.codeChef});
+    return res.json({success:true,rating,highestRating,stars,contestParticipated:Number(contestsParticipated),problemsSolved,id:user._id,email:normalizedEmail,linkedIn:user.linkedIn,twitter:user.twitter,userName:user.codeChef,userName2:user.userName});
     } catch (error) {
     console.log(error);
     return res.json({success:false,message:error.message,id:user._id,email:normalizedEmail||"",linkedIn:user?.linkedIn??"",twitter:user?.twitter??"",userName:user?.userName??""});

@@ -58,12 +58,14 @@ function StoreProvider(props) {
         ["temp-"+conversation.receiverId]:[]
       }));
     }
+    socket.emit("openChat",{userId:user.userId,conversationId:conversation._id});
     } catch (error) {
       console.log(error);
     }
   }
   const closeChat=(conversation)=>{
     setOpenChats(prev=>prev.filter(c=>c._id!==conversation._id));
+    socket.emit("closeChat",{userId:user.userId,conversationId:conversation._id});
   }
  const checkAuth=async()=>{
   try {
@@ -173,15 +175,45 @@ const handler3=(friend)=>{
 const handler4=(remove)=>{
   setFriends(prev=>prev.filter(f=>f.userName!==remove.userName));
 }
+const handler5=(message)=>{
+
+  setMessages(prev=>({
+        ...prev,
+        [message.updatedConversation._id]:[
+          ...(prev[message.updatedConversation._id] || []),
+          message.newMessage
+        ]
+      }));
+      setConversations(prev => 
+        prev.map(conv =>
+         conv._id === message.updatedConversation._id
+            ? message.updatedConversation
+            : conv
+      ).sort((a,b)=> new Date(b.updatedAt) - new Date(a.updatedAt))
+
+      
+   );
+}
+const handler6=(data)=>{
+setConversations(prev=>
+  prev.map(conv=>
+    conv._id===data.updatedConversation._id?data.updatedConversation:conv
+  )
+)
+}
 socket.on("friendRequestReceived",handler);
 socket.on("onlineUsers",handler2);
 socket.on("friendRequestAccepted",handler3);
 socket.on("friendRemoved",handler4);
+socket.on("getMessage",handler5);
+socket.on("resetUnreadCount",handler6);
 return ()=>{
 socket.off("friendRequestReceived",handler);
 socket.off("onlineUsers",handler2);
 socket.off("friendRequestAccepted",handler3);
 socket.off("friendRemoved",handler4);
+socket.off("getMessage",handler5);
+socket.off("resetUnreadCount",handler6);
 }
 },[socket]);
 

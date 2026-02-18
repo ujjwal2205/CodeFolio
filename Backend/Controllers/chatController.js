@@ -36,7 +36,10 @@ const getOrCreateConversations=async(req,res)=>{
 const getMessages=async(req,res)=>{
      const {conversationId,receiverId}=req.body;
      const userId=req.user.userId;
+     const io=req.app.get("io");
+    const onlineUsers=req.app.get("onlineUsers");
     try {
+        const socket=onlineUsers.get(userId);
         let conversation;
         let messages=[];
         if(conversationId){
@@ -50,7 +53,10 @@ const getMessages=async(req,res)=>{
         if(conversation){
             messages=await messagesModel.find({conversationId:conversation._id}).sort({createdAt:1});
         }
-        await conversationsModel.findByIdAndUpdate(conversation._id,{$set:{[`unreadCount.${userId}`]:0}});
+        const updatedConversation=await conversationsModel.findByIdAndUpdate(conversation._id,{$set:{[`unreadCount.${userId}`]:0}},{new:true}).populate("members", "userName");
+        if(socket){
+        io.to(socket).emit("resetUnreadCount",{updatedConversation});
+        }
         return res.json({success:true,data:messages});
     } catch (error) {
         console.log(error);
@@ -60,7 +66,12 @@ const getMessages=async(req,res)=>{
 const addMessage=async(req,res)=>{
     const {conversationId,receiverId,text}=req.body;
     const senderId=req.user.userId;
+    const io=req.app.get("io");
+    const onlineUsers=req.app.get("onlineUsers");
+    const openChats=req.app.get("openChats")
     try {
+        const receiverSocket=onlineUsers.get(receiverId);
+        const senderSocket=onlineUsers.get(senderId);
         let conversation;
         if(conversationId){
             conversation=await conversationsModel.findById(conversationId);
@@ -79,7 +90,20 @@ const addMessage=async(req,res)=>{
             });
         }
         const newMessage=await messagesModel.create({conversationId:conversation._id,senderId,text});
-        await conversationsModel.findByIdAndUpdate(conversation._id,{lastMessage:text,$inc:{[`unreadCount.${receiverId}`]:1}});
+        let updatedConversation=await conversationsModel.findByIdAndUpdate(conversation._id,{lastMessage:text},{new:true}).populate("members", "userName");;
+        const receiverChats=openChats.get(receiverId);
+        if(!receiverChats || !receiverChats.has(conversation._id.toString())){
+            updatedConversation=await conversationsModel.findByIdAndUpdate(conversation._id,{lastMessage:text,$inc:{[`unreadCount.${receiverId}`]:1}},{new:true}).populate("members", "userName");
+        }
+        else{
+            updatedConversation=await conversationsModel.findByIdAndUpdate(conversation._id,{$set:{[`unreadCount.${receiverId}`]:0}},{new:true}).populate("members", "userName");
+        }
+        if(receiverSocket){
+            io.to(receiverSocket).emit("getMessage",{updatedConversation,newMessage});
+        }
+        if(senderSocket){
+        io.to(senderSocket).emit("getMessage",{updatedConversation,newMessage});
+        }
         return res.json({success:true,newMessage,conversationId:conversation._id});
     } catch (error) {
         console.log(error);

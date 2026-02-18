@@ -1,12 +1,14 @@
 import React, { useContext, useState, useRef,useEffect } from "react";
 import { StoreContext } from "../../context/StoreContext.jsx";
+import { useNavigate } from "react-router-dom";
 import "./ChatWindow.css";
 import axios from "axios";
 function ChatWindow() {
-  const { openChats, closeChat,messages,setMessages,user,url } = useContext(StoreContext);
+  const { openChats, closeChat,messages,setMessages,user,url ,login} = useContext(StoreContext);
   const [inputMap, setInputMap] = useState({});
   const [minimizedChats,setMinimizedChats]=useState({});
   const scrollRefs = useRef({});
+  const navigate=useNavigate();
   useEffect(() => {
   openChats.forEach(conv => {
     const chatId = conv._id;
@@ -37,13 +39,7 @@ function ChatWindow() {
     if(response.data.success){
       const newMessage=response.data.newMessage;
       const newConversationId=response.data.conversationId;
-      setMessages(prev=>({
-        ...prev,
-        [newConversationId]:[
-          ...(prev[newConversationId] || []),
-          newMessage
-        ]
-      }));
+      
       setInputMap(prev => ({ ...prev, [newConversationId]: "" }));
       
     }
@@ -59,7 +55,7 @@ function ChatWindow() {
 
   return (
     <div className="chat-windows-container">
-      {openChats.map((conv, index) => {
+      {login && openChats.map((conv, index) => {
         const otherUser = conv.members.find(m => m._id !== user.userId);
         const isMinimized=minimizedChats[conv._id];
         return (
@@ -69,7 +65,7 @@ function ChatWindow() {
             style={{ left: `${index * 340 + 10}px` }} 
           >
             <div className="chat-window-header">
-              <span>{otherUser?.userName}</span>
+              <div  onClick={()=>navigate(`/dashboard/${otherUser?.userName}`)} style={{cursor:"pointer"}}><span>{otherUser?.userName}</span></div>
               <div className="chat-header-actions">
               <button
                className="minimize-btn"

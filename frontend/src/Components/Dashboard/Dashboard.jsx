@@ -23,6 +23,18 @@
       "friendRequests":null
     });
     useEffect(()=>{
+      setData({
+    id: "",
+    userName: "",
+    email: "",
+    linkedIn: "",
+    twitter: "",
+    leetCode: null,
+    codeChef: null,
+    codeForces: null,
+    leaderboardRank: null,
+    friendRequests: null
+  });
       const fetchData=async()=>{
         try {
           const friendRequests=await axios.post(url+`/api/friends/getFriendRequests/${userName}`,{},{withCredentials:true});
@@ -39,7 +51,7 @@
         }
       }
       fetchData();
-    },[friendRequestSent]);
+    },[friendRequestSent,userName]);
     useEffect(()=>{
       const fetchData=async()=>{
         try {
@@ -103,7 +115,7 @@
             email:ccRes.data.email,
             linkedIn:ccRes.data.linkedIn,
             twitter:ccRes.data.twitter,
-             userName:ccRes.data.userName
+             userName:ccRes.data.userName2
           }))
           }
           else{
@@ -124,7 +136,7 @@
           email: ccRes.data.email,
           linkedIn: ccRes.data.linkedIn,
           twitter: ccRes.data.twitter,
-          userName: ccRes.data.userName
+          userName: ccRes.data.userName2
           };
          });
           }
@@ -188,7 +200,7 @@
         }
       }
       fetchData();
-      console.log(data);
+      console.log();
     },[userName]);
     return (
       <div className="dashboard-root">
