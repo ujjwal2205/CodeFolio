@@ -1,7 +1,7 @@
 import React,{useContext} from "react";
 import { Link } from "react-router-dom";
 import { StoreContext } from "../../context/StoreContext.jsx";
-import { FaGithub, FaLinkedin, FaTwitter, FaHeart } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaTwitter} from "react-icons/fa";
 import "./Footer.css";
 
 function Footer() {
@@ -53,7 +53,7 @@ function Footer() {
       </div>
       <div className="footer-bottom">
         <p>
-          Made with <FaHeart className="heart" /> by CodeFolio
+          Made by Ujjwal
         </p>
         <span>© {new Date().getFullYear()} CodeFolio. All rights reserved.</span>
       </div>

@@ -14,11 +14,21 @@ function Navbar() {
     const dropdownRef=useRef(null);
     const [value,setValue]=useState("");
     useEffect(()=>{
-        const handleClickOutside=(event)=>{
-            if(!dropdownRef.current?.contains(event.target)){
-                setDropdown(false);
-            }
-        };
+            const wakeUpServer = async () => {
+              try {
+                await axios.get(`${url}/`);
+                console.log("Backend is awake.");
+              } catch (error) {
+                console.log("Backend wakeup failed", error.message);
+              }
+            };
+        
+            const handleClickOutside=(event)=>{
+                if(!dropdownRef.current?.contains(event.target)){
+                    setDropdown(false);
+                }
+            };
+            wakeUpServer();
         document.addEventListener("mousedown",handleClickOutside);
     },[]);
     
