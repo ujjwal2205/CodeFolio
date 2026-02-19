@@ -14,6 +14,10 @@ text:{
     type:String,
     required:true,
 },
+seen:{
+    type:Boolean,
+    default:false
+}
 },{timestamps:true});
 const messagesModel=mongoose.models.messages || mongoose.model("messages",messages);
 export default messagesModel;

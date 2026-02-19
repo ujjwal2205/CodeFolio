@@ -32,6 +32,7 @@ function StoreProvider(props) {
       return;
     }
     try {
+      const otherUser = conversation?.members?.find(m => m._id !== user.userId);
       let updatedChats=[...openChats,conversation];
       if(updatedChats.length>3){
         updatedChats=updatedChats.slice(1);
@@ -58,7 +59,7 @@ function StoreProvider(props) {
         ["temp-"+conversation.receiverId]:[]
       }));
     }
-    socket.emit("openChat",{userId:user.userId,conversationId:conversation._id});
+    socket.emit("openChat",{userId:user.userId,conversationId:conversation._id,receiverId:otherUser?._id});
     } catch (error) {
       console.log(error);
     }
@@ -184,15 +185,23 @@ const handler5=(message)=>{
           message.newMessage
         ]
       }));
-      setConversations(prev => 
-        prev.map(conv =>
-         conv._id === message.updatedConversation._id
-            ? message.updatedConversation
-            : conv
-      ).sort((a,b)=> new Date(b.updatedAt) - new Date(a.updatedAt))
+      setConversations(prev => {
+  const exists = prev.some(conv => conv._id === message.updatedConversation._id);
+  if (exists) {
+    return prev
+      .map(conv =>
+        conv._id === message.updatedConversation._id
+          ? message.updatedConversation
+          : conv
+      )
+      .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+  } else {
+    return [...prev, message.updatedConversation].sort(
+      (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+    );
+  }
+});
 
-      
-   );
 }
 const handler6=(data)=>{
 setConversations(prev=>
@@ -201,12 +210,20 @@ setConversations(prev=>
   )
 )
 }
+const handler7=(data)=>{
+  setMessages(prev=>({
+    ...prev,
+    [data.conversationId]:prev[data.conversationId].map(msg=>
+      msg.senderId!==data.userId?{...msg,seen:true}:msg
+  )}))
+}
 socket.on("friendRequestReceived",handler);
 socket.on("onlineUsers",handler2);
 socket.on("friendRequestAccepted",handler3);
 socket.on("friendRemoved",handler4);
 socket.on("getMessage",handler5);
 socket.on("resetUnreadCount",handler6);
+socket.on("messagesSeen",handler7);
 return ()=>{
 socket.off("friendRequestReceived",handler);
 socket.off("onlineUsers",handler2);
@@ -214,6 +231,7 @@ socket.off("friendRequestAccepted",handler3);
 socket.off("friendRemoved",handler4);
 socket.off("getMessage",handler5);
 socket.off("resetUnreadCount",handler6);
+socket.off("messagesSeen",handler7);
 }
 },[socket]);
 

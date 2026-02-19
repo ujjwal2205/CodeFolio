@@ -89,14 +89,17 @@ const addMessage=async(req,res)=>{
                 lastMessage:""
             });
         }
-        const newMessage=await messagesModel.create({conversationId:conversation._id,senderId,text});
-        let updatedConversation=await conversationsModel.findByIdAndUpdate(conversation._id,{lastMessage:text},{new:true}).populate("members", "userName");;
+        let newMessage;
+        let updatedConversation=await conversationsModel.findByIdAndUpdate(conversation._id,{lastMessage:text},{new:true}).populate("members", "userName");
         const receiverChats=openChats.get(receiverId);
         if(!receiverChats || !receiverChats.has(conversation._id.toString())){
             updatedConversation=await conversationsModel.findByIdAndUpdate(conversation._id,{lastMessage:text,$inc:{[`unreadCount.${receiverId}`]:1}},{new:true}).populate("members", "userName");
+            newMessage=await messagesModel.create({conversationId:conversation._id,senderId,text});
         }
         else{
             updatedConversation=await conversationsModel.findByIdAndUpdate(conversation._id,{$set:{[`unreadCount.${receiverId}`]:0}},{new:true}).populate("members", "userName");
+            newMessage=await messagesModel.create({conversationId:conversation._id,senderId,text,seen:true});
+
         }
         if(receiverSocket){
             io.to(receiverSocket).emit("getMessage",{updatedConversation,newMessage});

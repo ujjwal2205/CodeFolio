@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import {connectDB} from './config/db.js';
+import mongoose from "mongoose";
 import userRouter from "./Routes/userRoute.js";
 import siteRouter from "./Routes/siteRoute.js";
 import passwordReset from "./Routes/passwordResetRoute.js";
@@ -9,6 +10,7 @@ import LeaderBoard from "./Routes/leaderBoardRoute.js";
 import chat from "./Routes/chatRoute.js";
 import changeRouter from "./Routes/ChangeRoute.js";
 import cookieParser from "cookie-parser";
+import messagesModel from "./models/messagesModel.js";
 import http from "http";
 import {Server} from "socket.io";
 import 'dotenv/config'
@@ -41,11 +43,17 @@ io.on("connection",(socket)=>{
         io.emit("onlineUsers",Array.from(onlineUsers.keys()));
         console.log("Online Users:",onlineUsers);
     })
-    socket.on("openChat",({userId,conversationId})=>{
+    socket.on("openChat",async({userId,conversationId,receiverId})=>{
+        const receiverSocket=onlineUsers.get(receiverId);
         if(!openChats.has(userId)){
         openChats.set(userId,new Set());
         }
         openChats.get(userId).add(conversationId);
+        const receiverObjectId=new mongoose.Types.ObjectId(receiverId);
+        await messagesModel.updateMany({conversationId,senderId:receiverObjectId,seen:false},{$set:{seen:true}});
+        if(receiverSocket){
+        io.to(receiverSocket).emit("messagesSeen",{conversationId,userId});
+        }
     });
     socket.on("closeChat",({userId,conversationId})=>{
         if(openChats.has(userId)){

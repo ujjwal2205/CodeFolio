@@ -10,6 +10,22 @@
     const {userName}=useParams();
     const [active, setActive] = useState("overview");
     const {url,user,friendRequestSent,setFriendRequestSent}=useContext(StoreContext);
+    const [spinner,setSpinner]=useState(true);
+    const loadingMessages = [
+  `Analyzing ${userName}'s coding stats...`,
+  "Fetching contest history...",
+  "Preparing dashboard..."
+];
+
+const [messageIndex, setMessageIndex] = useState(0);
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    setMessageIndex(prev => (prev + 1) % loadingMessages.length);
+  }, 1500);
+
+  return () => clearInterval(interval);
+}, []);
     const [data,setData]=useState({
       "id":"",
       "userName":"",
@@ -53,6 +69,7 @@
       fetchData();
     },[friendRequestSent,userName]);
     useEffect(()=>{
+       setSpinner(true);
       const fetchData=async()=>{
         try {
           const lcRes=await axios.post(url+`/api/site/leetcode/${userName}`,{},{withCredentials:true});
@@ -198,15 +215,26 @@
           toast.error(error.message);
           console.log(error);
         }
+        finally{
+          setSpinner(false);
+        }
       }
       fetchData();
       console.log();
     },[userName]);
     return (
+      spinner?
+      <div className="spinner-container">
+        <div className="spinner"></div>
+        <p className="spinner-text">
+        {loadingMessages[messageIndex]}
+        </p>
+      </div>:(<>
       <div className="dashboard-root">
         <LeftSidebar active={active} setActive={setActive} data={data}/>
         <RightSidebar active={active} data={data}/>
       </div>
+      </>)
     );
   }
 export default Dashboard;
