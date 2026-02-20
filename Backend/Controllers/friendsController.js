@@ -1,4 +1,6 @@
 import userModel from "../models/userModel.js";
+import conversationsModel from "../models/conversationModel.js";
+import messagesModel from "../models/messagesModel.js";
 const sendFriendRequest=async(req,res)=>{
     const {receiverUserName}=req.body;
     const userId=req.user.userId;
@@ -125,6 +127,11 @@ const removeFriend=async(req,res)=>{
         if(!friend){
             return res.json({success:false,message:"User not found!"});
         }
+        const conversation=await conversationsModel.findOne({members:{$all:[user._id,friend._id]}});
+        if(conversation){
+        await conversationsModel.deleteOne({_id:conversation._id});
+        await messagesModel.deleteMany({conversationId:conversation._id});
+        }
         user.friends=user.friends.filter(
             id=>!id.equals(friend._id)
         )
@@ -133,9 +140,14 @@ const removeFriend=async(req,res)=>{
         )
         await user.save();
         await friend.save();
+        const conversationId=conversation?conversation._id:null;
+        const userSocketId=onlineUsers.get(user._id.toString());
         const friendSocketId=onlineUsers.get(friend._id.toString());
         if(friendSocketId){
-            io.to(friendSocketId).emit("friendRemoved",{_id:user._id,userName:user.userName});
+            io.to(friendSocketId).emit("friendRemoved",{_id:user._id,userName:user.userName,conversationId});
+        }
+        if(userSocketId){
+            io.to(userSocketId).emit("friendRemoved",{_id:friend._id,userName:friend.userName,conversationId});
         }
         return res.json({success:true,message:"Friend Removed Successfully."});
     } catch (error) {

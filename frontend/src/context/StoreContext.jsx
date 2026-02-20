@@ -6,7 +6,7 @@ import {toast} from 'react-toastify'
 export const StoreContext=createContext();
 function StoreProvider(props) {
   
-  const url="https://codefolio-backend-zhvp.onrender.com";
+  const url="http://localhost:4000";
   const dummyMessages = {
   c1: [
     { senderId: "u2", text: "Bro kal milte hain?", timestamp: "2026-02-14T10:30:00" },
@@ -175,6 +175,14 @@ const handler3=(friend)=>{
 }
 const handler4=(remove)=>{
   setFriends(prev=>prev.filter(f=>f.userName!==remove.userName));
+  setConversations(prev=>{
+      return prev.filter(conv=>conv._id!==remove.conversationId);
+  })
+    setOpenChats(prev =>
+      prev.filter(openChat =>
+        conversations.some(conv => conv._id === openChat._id)
+      )
+    );
 }
 const handler5=(message)=>{
 
@@ -213,7 +221,7 @@ setConversations(prev=>
 const handler7=(data)=>{
   setMessages(prev=>({
     ...prev,
-    [data.conversationId]:prev[data.conversationId].map(msg=>
+    [data.conversationId]:prev[data.conversationId]?.map(msg=>
       msg.senderId!==data.userId?{...msg,seen:true}:msg
   )}))
 }
@@ -236,7 +244,7 @@ socket.off("messagesSeen",handler7);
 },[socket]);
 
   const contextValue={
-    url,user,checkAuth,friends,requests,setFriends,setRequests,fetchFriendsAndRequests2,friendRequestSent,setFriendRequestSent,login,setLogin,onlineUsers,socket,openChat,closeChat,openChats,messages,setMessages,conversations
+    url,user,checkAuth,friends,requests,setFriends,setRequests,fetchFriendsAndRequests2,friendRequestSent,setFriendRequestSent,login,setLogin,onlineUsers,socket,openChat,closeChat,openChats,messages,setMessages,conversations,setOpenChats
   };
   return (
     <StoreContext.Provider value={contextValue}>

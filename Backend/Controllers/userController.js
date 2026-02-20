@@ -47,8 +47,8 @@ const signUp=async(req,res)=>{
     const token=createToken(newUser);
     res.cookie("token",token,{
         httpOnly:true,
-        secure:true,
-        sameSite:"none",
+        secure:false,
+        sameSite:"lax",
         maxAge:7*24*60*60*1000
     })
     return res.json({success:true,token,message:"Login Successful!"});
@@ -77,8 +77,8 @@ const logIn=async(req,res)=>{
    const token=createToken(exists);
    res.cookie("token",token,{
         httpOnly:true,
-        secure:true,
-        sameSite:"none",
+        secure:false,
+        sameSite:"lax",
         maxAge:7*24*60*60*1000
     })
    return res.json({success:true,token,message:"Login Successful!"});
@@ -93,8 +93,8 @@ const logOut=async(req,res)=>{
     try {
         res.clearCookie("token",{
             httpOnly:true,
-            secure:true,
-            sameSite:"none"
+            secure:false,
+            sameSite:"lax"
         });
         return res.json({success:true,message:"Logged Out Successfully!"});
     } catch (error) {
@@ -132,8 +132,8 @@ const googleLogin=async(req,res)=>{
         const token=createToken(user);
         res.cookie("token",token,{
         httpOnly:true,
-        secure:true,
-        sameSite:"none",
+        secure:false,
+        sameSite:"lax",
         maxAge:7*24*60*60*1000
     })
     return res.json({success:true,message:"Login Successful!"});

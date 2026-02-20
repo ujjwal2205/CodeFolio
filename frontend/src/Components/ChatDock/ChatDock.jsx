@@ -1,11 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import "./ChatDock.css";
 import { StoreContext } from "../../context/StoreContext";
 
 function ChatDock() {
-  const { openChat, login, onlineUsers, conversations = [], user } =
+  const { openChat, login, onlineUsers, conversations, user } =
     useContext(StoreContext);
-
   const isOnline = (friendId) => {
     return onlineUsers.includes(friendId);
   };

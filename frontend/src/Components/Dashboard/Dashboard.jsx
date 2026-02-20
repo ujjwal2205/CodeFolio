@@ -39,18 +39,6 @@ useEffect(() => {
       "friendRequests":null
     });
     useEffect(()=>{
-      setData({
-    id: "",
-    userName: "",
-    email: "",
-    linkedIn: "",
-    twitter: "",
-    leetCode: null,
-    codeChef: null,
-    codeForces: null,
-    leaderboardRank: null,
-    friendRequests: null
-  });
       const fetchData=async()=>{
         try {
           const friendRequests=await axios.post(url+`/api/friends/getFriendRequests/${userName}`,{},{withCredentials:true});
@@ -70,6 +58,18 @@ useEffect(() => {
     },[friendRequestSent,userName]);
     useEffect(()=>{
        setSpinner(true);
+       setData({
+    id: "",
+    userName: "",
+    email: "",
+    linkedIn: "",
+    twitter: "",
+    leetCode: null,
+    codeChef: null,
+    codeForces: null,
+    leaderboardRank: null,
+    friendRequests: null
+  });
       const fetchData=async()=>{
         try {
           const lcRes=await axios.post(url+`/api/site/leetcode/${userName}`,{},{withCredentials:true});
