@@ -1,7 +1,7 @@
 import React,{useEffect} from 'react'
 import {useLocation,useNavigate} from 'react-router-dom';
 import Header from '../../Components/Header/Header.jsx';
-import HowItWorks from '../../Components/howItWorks/howItWorks.jsx';
+import HowItWorks from '../../Components/HowItWorks/HowItWorks.jsx';
 import WhyCodeFolio from '../../Components/WhyCodeFolio/WhyCodeFolio.jsx';
 import LeaderBoardPreview from '../../Components/LeaderBoardPreview/LeaderBoardPreview.jsx';
 import { toast } from 'react-toastify';
