@@ -17,10 +17,19 @@ import 'dotenv/config'
 const app=express();
 const port=process.env.PORT || 4000;
 
-app.use(express.json());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://codefolio-kelh.onrender.com"
+];
+
 app.use(cors({
-    origin:["http://localhost:5173","https://codefolio-kelh.onrender.com"],
-    credentials:true
+  origin: allowedOrigins,
+  credentials: true
+}));
+
+app.options("*", cors({
+  origin: allowedOrigins,
+  credentials: true
 }));
 app.use(cookieParser());
 connectDB();
