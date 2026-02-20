@@ -6,7 +6,7 @@ import {toast} from 'react-toastify'
 export const StoreContext=createContext();
 function StoreProvider(props) {
   
-  const url="http://localhost:4000";
+  const url="https://codefolio-backend-zhvp.onrender.com";
   const dummyMessages = {
   c1: [
     { senderId: "u2", text: "Bro kal milte hain?", timestamp: "2026-02-14T10:30:00" },
