@@ -5,7 +5,6 @@
   font-family: 'Outfit', sans-serif;
 }
 
-/* ===== Page ===== */
 .cf-signup-page {
   min-height: 100vh;
   display: flex;
@@ -14,7 +13,6 @@
   background-color:#020617;
 }
 
-/* ===== Card ===== */
 .cf-signup-card {
   width: 100%;
   max-width: 420px;
@@ -26,7 +24,6 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
 
-/* ===== Logo ===== */
 .cf-signup-logo {
   text-align: center;
   font-size: 30px;
@@ -45,14 +42,12 @@
   font-size: 13px;
 }
 
-/* ===== Form ===== */
 .cf-signup-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-/* Row inputs */
 .cf-row {
   display: flex;
   gap: 10px;
@@ -62,7 +57,6 @@
   width: 100%;
 }
 
-/* Inputs */
 .cf-signup-form input {
   height: 40px;
   padding: 0 12px;
@@ -84,7 +78,6 @@
   box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.18);
 }
 
-/* ===== Password Group ===== */
 .cf-password-group {
   position: relative;
 }
@@ -107,8 +100,6 @@
 .cf-password-group span:hover {
   color: #facc15;
 }
-
-/* ===== Section Title ===== */
 .cf-section-title {
   margin-top: 6px;
   font-size: 12px;
@@ -116,7 +107,6 @@
   color: #94a3b8;
 }
 
-/* ===== Button ===== */
 .cf-signup-btn {
   margin-top: 8px;
   padding: 10px;
@@ -135,7 +125,6 @@
   box-shadow: 0 10px 30px rgba(250, 204, 21, 0.35);
 }
 
-/* ===== OR Divider ===== */
 .or-text {
   margin: 14px 0 8px;
   text-align: center;
@@ -162,7 +151,6 @@
   right: 0;
 }
 
-/* ===== Google Login ===== */
 .google-login {
   display: flex;
   justify-content: center;
@@ -180,7 +168,6 @@
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
 }
 
-/* ===== Footer ===== */
 .cf-signup-footer {
   margin-top: 14px;
   text-align: center;

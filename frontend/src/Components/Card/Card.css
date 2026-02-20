@@ -12,7 +12,7 @@
   width: 360px;
   background-color: #11141b;
   border-radius: 24px;
-  padding: 56px 20px 40px 20px; /* top padding increased for avatar */
+  padding: 56px 20px 40px 20px; 
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
   color: #e6e8ee;
   display: flex;

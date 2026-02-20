@@ -9,6 +9,11 @@ function Leaderboard() {
   const [activeTab, setActiveTab] = useState("overall");
   const {url,user}=useContext(StoreContext);
   const [userName,setUserName]=useState("");
+  const [currentPage,setCurrentPage]=useState(1);
+  const usersPerPage=10;
+  useEffect(()=>{
+    setCurrentPage(1);
+  },[activeTab]);
   const [leaderBoardData,setLeaderBoardData]=useState({
     overall:[],
     leetCode:[],
@@ -65,11 +70,14 @@ function Leaderboard() {
   useEffect(()=>{
  console.log(userName);
   },[userName])
+  const totalUsers=leaderBoardData[activeTab].length;
+  const totalPages=Math.ceil(totalUsers/usersPerPage);
+  const startIndex=(currentPage-1)*usersPerPage;
+  const endIndex=startIndex+usersPerPage;
+  const currentUsers=leaderBoardData[activeTab]?.slice(startIndex,endIndex);
   return (
     <div className="leaderboard-page">
       <h1 className="title">🏆 Leaderboard</h1>
-
-      {/* Tabs */}
       <div className="tabs">
         {["overall", "leetCode", "codeChef", "codeForces"].map((tab) => (
           <button
@@ -81,8 +89,6 @@ function Leaderboard() {
           </button>
         ))}
       </div>
-
-      {/* Table */}
       <div className="leaderboard-table">
         <div className="table-header">
           <span>Rank</span>
@@ -90,7 +96,7 @@ function Leaderboard() {
           <span>Score</span>
         </div>
 
-        {leaderBoardData[activeTab].map((user,index) => {
+        {currentUsers.map((user,index) => {
           const isMyUserName = user.userName === userName;
 
           return (
@@ -115,6 +121,29 @@ function Leaderboard() {
           );
         })}
       </div>
+      <div className="pagination">
+  <button
+    className="page-btn"
+    disabled={currentPage === 1}
+    onClick={() => setCurrentPage(prev => prev - 1)}
+  >
+    ← Prev
+  </button>
+
+  <div className="page-info">
+    <span className="current-page">{currentPage}</span>
+    <span className="divider">/</span>
+    <span>{totalPages}</span>
+  </div>
+
+  <button
+    className="page-btn"
+    disabled={currentPage === totalPages}
+    onClick={() => setCurrentPage(prev => prev + 1)}
+  >
+    Next →
+  </button>
+</div>
     </div>
   );
 }

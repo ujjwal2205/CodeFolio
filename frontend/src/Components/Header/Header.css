@@ -88,7 +88,6 @@
   gap: 1.6rem;
 }
 
-/* TERMINAL */
 .terminal {
   width: 340px;
   background: rgba(15, 15, 20, 0.95);
@@ -138,7 +137,6 @@
   color: #facc15;
 }
 
-/* PLATFORM CARDS */
 .platforms {
   display: flex;
   gap: 1rem;
