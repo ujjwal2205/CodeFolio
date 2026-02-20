@@ -19,7 +19,7 @@ const port=4000;
 
 app.use(express.json());
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin:["http://localhost:5173","https://codefolio-kelh.onrender.com"],
     credentials:true
 }));
 app.use(cookieParser());
@@ -27,7 +27,7 @@ connectDB();
 const server=http.createServer(app);
 const io=new Server(server,{
     cors:{
-        origin:"http://localhost:5173",
+        origin:["http://localhost:5173","https://codefolio-kelh.onrender.com"],
         credentials:true
     }
 });
