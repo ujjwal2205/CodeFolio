@@ -21,10 +21,10 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://codefolio-kelh.onrender.com"
 ];
-
+app.use(express.json());
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
+  origin:["http://localhost:5173","https://codefolio-kelh.onrender.com"],
+  credentials:true
 }));
 
 app.use(cookieParser());
