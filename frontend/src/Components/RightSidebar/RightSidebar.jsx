@@ -30,16 +30,16 @@ function RightSidebar({ active,data }) {
           </div>
 
           <div className="dashboard-body-grid-half">
-            {(data.leetCode?.contest?.contestAttend>0 || data.codeChef?.contestParticipated!=0 || data.codeForces?.contest.length!=0) && <>
+            {(data.leetCode?.contest?.data?.userContestRanking?.attendedContestsCount>0 || data.codeChef?.contestParticipated!=0 || data.codeForces?.contest.length!=0) && <>
             <div className="col-balanced">
               <div className="glass-card contest-box-main">
                 <div className="contest-flex-ui">
                   <div className="contest-big">
                     <p>Total Contests</p>
-                    <h1>{(data.codeChef?.contestParticipated||0)+(data.codeForces?.contest.length||0)+(data.leetCode?.contest.contestAttend||0)}</h1>
+                    <h1>{(data.codeChef?.contestParticipated||0)+(data.codeForces?.contest.length||0)+(data.leetCode?.contest?.data?.userContestRanking?.attendedContestsCount||0)}</h1>
                   </div>
                   <div className="platform-breakdown-list">
-                    {data.leetCode?.contest?.contestAttend>0 && <>
+                    {data.leetCode?.contest?.data?.userContestRanking?.attendedContestsCount>0 && <>
                     <button 
                     className={`p-list-btn ${ratingPlatform === "leetCode" ? "active" : ""}`}
                     onClick={() => setRatingPlatform("leetCode")}
@@ -48,7 +48,7 @@ function RightSidebar({ active,data }) {
                    <SiLeetcode />
                    <span>Leetcode</span>
                    </div>
-                  <strong>{data.leetCode?.contest.contestAttend||0}</strong>
+                  <strong>{data.leetCode?.contest?.data?.userContestRanking?.attendedContestsCount||0}</strong>
                   </button>
                   </>}
                   {(data.codeForces!=null && data.codeForces?.contest.length!=0) && 
@@ -86,7 +86,7 @@ function RightSidebar({ active,data }) {
                 <div className="g-meta-header">
                   <div className="r-display">
                     <p>Rating</p>
-                    <h2>{ratingPlatform === "leetCode" ? Math.floor(data.leetCode?.contest.contestRating ||0) : data.codeForces?.rating||0}</h2>
+                    <h2>{ratingPlatform === "leetCode" ? Math.floor(data.leetCode?.contest?.data?.userContestRanking.rating ||0) : data.codeForces?.rating||0}</h2>
                   </div>
                 </div>
                   }
@@ -148,13 +148,13 @@ function RightSidebar({ active,data }) {
           </div>
 
           <div className="lc-dashboard-body-grid-half">
-            {data.leetCode?.contest?.contestAttend>0 && <>
+            {data.leetCode?.contest?.data?.userContestRanking?.attendedContestsCount>0 && <>
             <div className="lc-col-balanced">
               <div className="lc-glass-card contest-box-main">
                 <div className="lc-contest-flex-ui">
                   <div className="contest-big">
                     <p>Total Contests</p>
-                    <h1>{data.leetCode?.contest.contestAttend||0}</h1>
+                    <h1>{data.leetCode?.contest?.data?.userContestRanking?.attendedContestsCount||0}</h1>
                   </div>
                   <div className="lc-platform-breakdown-list">
                     <button 
@@ -164,7 +164,7 @@ function RightSidebar({ active,data }) {
                    <SiLeetcode />
                    <span>Leetcode</span>
                    </div>
-                  <strong>{data.leetCode?.contest.contestAttend||0}</strong>
+                  <strong>{data.leetCode?.contest?.data?.userContestRanking?.attendedContestsCount||0}</strong>
                   </button>
 
                   </div>
@@ -175,7 +175,7 @@ function RightSidebar({ active,data }) {
                 <div className="lc-g-meta-header">
                   <div className="lc-r-display">
                     <p>Rating</p>
-                    <h2>{Math.floor(data.leetCode?.contest.contestRating||0)}</h2>
+                    <h2>{Math.floor(data.leetCode?.contest?.data?.userContestRanking?.rating ||0)}</h2>
                   </div>
                 </div>
                 <div className="lc-chart-box-ui">
@@ -364,7 +364,7 @@ function RatingGraph({ platform,data }) {
   if (platform === "codeChef") return null;
   const chartData =
   platform === "leetCode"
-        ? data.leetCode?.contest?.contestParticipation?.map(c => ({
+        ? data.leetCode?.contest?.data?.userContestRankingHistory?.map(c => ({
         rating: Math.floor(c.rating),
         contest: c.contest.title,
         time: new Date(c.contest.startTime * 1000)
