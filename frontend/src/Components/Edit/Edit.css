@@ -1,0 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+body {
+   background-color: #0b0e14; color: #e6e8ee; 
+  }
+.ep-container * {
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.ep-container {
+  max-width: 700px;
+  margin: 80px auto;
+  padding: 42px;
+  background: linear-gradient(180deg, #11141b, #0d1017);
+  border: 1px solid #1f2430;
+  border-radius: 16px;
+}
+
+.ep-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #e6e8ee;
+  margin-bottom: 36px;
+  position: relative;
+}
+
+.ep-title::after {
+  content: "";
+  width: 34px;
+  height: 3px;
+  background: linear-gradient(90deg, #f0c36a, #ffd98a);
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  border-radius: 4px;
+}
+
+.ep-field {
+  margin-bottom: 26px;
+}
+
+.ep-label {
+  display: block;
+  font-size: 12px;
+  color: #9aa0b3;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.ep-inputWrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background-color: #0c0f16;
+  border: 1px solid #1f2430;
+  border-radius: 12px;
+  transition: all 0.25s ease;
+}
+
+.ep-inputWrap:focus-within {
+  border-color: #f0c36a;
+  background-color: #101524;
+  box-shadow: 0 0 0 1px rgba(240, 195, 106, 0.25);
+}
+
+.ep-prefix {
+  font-size: 13px;
+  color: #6f7688;
+  white-space: nowrap;
+}
+
+.ep-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e6e8ee;
+  font-size: 14px;
+}
+
+.ep-input::placeholder {
+  color: #6f7688;
+}
+
+.ep-btn {
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #141827, #0f1219);
+  border: 1px solid #1f2430;
+  color: #f0c36a;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.ep-btn:hover {
+  background: linear-gradient(180deg, #1a1f33, #141827);
+  border-color: #f0c36a;
+  box-shadow: 0 6px 18px rgba(240, 195, 106, 0.15);
+}
+
+@media (max-width: 600px) {
+  .ep-container {
+    margin: 24px 14px;
+    padding: 28px;
+  }
+
+  .ep-inputWrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ep-btn {
+    width: 100%;
+  }
+}
