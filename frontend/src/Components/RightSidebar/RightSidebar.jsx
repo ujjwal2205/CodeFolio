@@ -86,7 +86,7 @@ function RightSidebar({ active,data }) {
                 <div className="g-meta-header">
                   <div className="r-display">
                     <p>Rating</p>
-                    <h2>{ratingPlatform === "leetCode" ? Math.floor(data.leetCode?.contest?.data?.userContestRanking.rating ||0) : data.codeForces?.rating||0}</h2>
+                    <h2>{ratingPlatform === "leetCode" ? Math.floor(data.leetCode?.contest?.data?.userContestRanking?.rating ||0) : data.codeForces?.rating||0}</h2>
                   </div>
                 </div>
                   }
