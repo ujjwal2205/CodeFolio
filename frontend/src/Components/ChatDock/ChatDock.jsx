@@ -94,7 +94,7 @@ function ChatDock() {
                         {otherUser.userName}
                       </span>
                       <span className="chatdock-time">
-                        {formatTime(conv.updatedAt)}
+                        {formatTime(conv.lastMessageTime)}
                       </span>
                     </div>
 

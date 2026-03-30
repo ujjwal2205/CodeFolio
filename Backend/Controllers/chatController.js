@@ -23,7 +23,8 @@ const getOrCreateConversations=async(req,res)=>{
                     [senderId]:0,
                     [receiverId]:0
                 },
-                lastMessage:""
+                lastMessage:"",
+                lastMessageTime:new Date()
             });
             conversation=await conversation.populate("members","userName");
         }
@@ -86,14 +87,15 @@ const addMessage=async(req,res)=>{
                     [senderId]:0,
                     [receiverId]:0
                 },
-                lastMessage:""
+                lastMessage:"",
+                lastMessageTime:new Date()
             });
         }
         let newMessage;
-        let updatedConversation=await conversationsModel.findByIdAndUpdate(conversation._id,{lastMessage:text},{new:true}).populate("members", "userName");
+        let updatedConversation=await conversationsModel.findByIdAndUpdate(conversation._id,{lastMessage:text,lastMessageTime:new Date()},{new:true}).populate("members", "userName");
         const receiverChats=openChats.get(receiverId);
         if(!receiverChats || !receiverChats.has(conversation._id.toString())){
-            updatedConversation=await conversationsModel.findByIdAndUpdate(conversation._id,{lastMessage:text,$inc:{[`unreadCount.${receiverId}`]:1}},{new:true}).populate("members", "userName");
+            updatedConversation=await conversationsModel.findByIdAndUpdate(conversation._id,{lastMessage:text,lastMessageTime:new Date(),$inc:{[`unreadCount.${receiverId}`]:1}},{new:true}).populate("members", "userName");
             newMessage=await messagesModel.create({conversationId:conversation._id,senderId,text});
         }
         else{

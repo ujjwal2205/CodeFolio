@@ -9,7 +9,8 @@ const conversations=new mongoose.Schema({
         of:Number,
         default:{}
     },
-    lastMessage:{type:String,default:""}
+    lastMessage:{type:String,default:""},
+    lastMessageTime:{type:Date}
     },{timestamps:true});
 const conversationsModel=mongoose.models.conversations || mongoose.model("conversations",conversations);
 export default conversationsModel;
